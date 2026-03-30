@@ -9,6 +9,7 @@ import {
   Calendar,
   Settings,
   Zap,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,8 +21,13 @@ const nav = [
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ email }: { email?: string }) {
   const pathname = usePathname();
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
+  }
 
   return (
     <aside className="w-56 shrink-0 bg-[#161616] border-r border-white/[0.06] flex flex-col">
@@ -51,6 +57,18 @@ export function Sidebar() {
           );
         })}
       </nav>
+      <div className="px-2 py-3 border-t border-white/[0.06]">
+        {email && (
+          <p className="px-3 text-[11px] text-white/20 truncate mb-1">{email}</p>
+        )}
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-2.5 px-3 py-2 rounded-md text-sm text-white/30 hover:text-white hover:bg-white/[0.05] transition-colors"
+        >
+          <LogOut size={15} />
+          Sign out
+        </button>
+      </div>
     </aside>
   );
 }
