@@ -16,15 +16,23 @@ export default async function LoginPage({
   const errorMsg = error ? (ERROR_MESSAGES[error] ?? "Something went wrong.") : undefined;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f]">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-white tracking-tight">Content Hub</h1>
-          <p className="text-sm text-white/30 mt-1">Sign in to continue</p>
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="rounded-2xl p-8 w-full max-w-sm shadow-2xl" style={{ backgroundColor: "#2a2f3f" }}>
+        <div className="flex justify-center mb-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://imagely.limely.co.uk/wp-content/uploads/logo.svg"
+            alt="Limely"
+            style={{ height: 36, width: "auto" }}
+          />
         </div>
-        <div className="bg-[#161616] border border-white/[0.06] rounded-xl p-6">
-          <LoginForm initialError={errorMsg} />
-        </div>
+        <h1 className="text-lg font-semibold text-center text-white mb-1">
+          Content Hub
+        </h1>
+        <p className="text-sm text-center mb-6" style={{ color: "rgba(255,255,255,0.4)" }}>
+          Enter your Limely email to sign in.
+        </p>
+        <LoginForm initialError={errorMsg} />
       </div>
     </div>
   );

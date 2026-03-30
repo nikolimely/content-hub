@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 
 type State = "idle" | "loading" | "sent" | "error";
 
@@ -37,21 +36,25 @@ export function LoginForm({ initialError }: { initialError?: string }) {
   if (state === "sent") {
     return (
       <div className="text-center py-2">
-        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+          style={{ backgroundColor: "#A7C838" }}
+        >
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <p className="text-sm font-medium text-white mb-1">Check your inbox</p>
-        <p className="text-xs text-white/40 leading-relaxed">
+        <p className="font-semibold text-white mb-1">Check your inbox</p>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
           We sent a magic link to{" "}
-          <span className="text-white/70">{email}</span>.
+          <span className="font-medium text-white">{email}</span>.
           <br />
           It expires in 15 minutes.
         </p>
         <button
           onClick={() => { setState("idle"); setEmail(""); }}
-          className="mt-5 text-xs text-white/25 hover:text-white/50 transition-colors underline"
+          className="mt-4 text-xs underline hover:opacity-80"
+          style={{ color: "rgba(255,255,255,0.4)" }}
         >
           Use a different email
         </button>
@@ -62,7 +65,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label htmlFor="email" className="block text-xs text-white/40 mb-1.5">
+        <label htmlFor="email" className="block text-xs font-medium mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>
           Email address
         </label>
         <input
@@ -72,7 +75,11 @@ export function LoginForm({ initialError }: { initialError?: string }) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@limely.co.uk"
           required
-          className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/25 transition-colors"
+          className="w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-colors text-white"
+          style={{
+            backgroundColor: "rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.12)",
+          }}
         />
       </div>
 
@@ -83,13 +90,10 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       <button
         type="submit"
         disabled={state === "loading"}
-        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-medium bg-white text-black hover:bg-white/90 disabled:opacity-50 transition-colors"
+        className="w-full py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity disabled:opacity-60"
+        style={{ backgroundColor: "#A7C838" }}
       >
-        {state === "loading" ? (
-          <><Loader2 size={14} className="animate-spin" /> Sending…</>
-        ) : (
-          "Send magic link"
-        )}
+        {state === "loading" ? "Sending…" : "Send magic link"}
       </button>
     </form>
   );

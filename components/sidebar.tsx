@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Globe,
-  FileText,
   Calendar,
   Settings,
   Zap,
@@ -30,11 +29,14 @@ export function Sidebar({ email }: { email?: string }) {
   }
 
   return (
-    <aside className="w-56 shrink-0 bg-[#161616] border-r border-white/[0.06] flex flex-col">
-      <div className="h-14 flex items-center px-4 border-b border-white/[0.06]">
-        <span className="text-sm font-semibold tracking-tight text-white">
-          Content Hub
-        </span>
+    <aside className="w-56 shrink-0 flex flex-col" style={{ backgroundColor: "#2A2944" }}>
+      <div className="h-14 flex items-center px-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://imagely.limely.co.uk/wp-content/uploads/logo.svg"
+          alt="Limely"
+          style={{ height: 24, width: "auto" }}
+        />
       </div>
       <nav className="flex-1 px-2 py-3 space-y-0.5">
         {nav.map(({ label, href, icon: Icon }) => {
@@ -47,9 +49,10 @@ export function Sidebar({ email }: { email?: string }) {
               className={cn(
                 "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors",
                 active
-                  ? "bg-white/10 text-white"
-                  : "text-white/50 hover:text-white hover:bg-white/[0.05]"
+                  ? "text-white"
+                  : "text-white/50 hover:text-white"
               )}
+              style={active ? { backgroundColor: "rgba(167,200,56,0.15)", color: "#A7C838" } : undefined}
             >
               <Icon size={15} />
               {label}
@@ -57,13 +60,16 @@ export function Sidebar({ email }: { email?: string }) {
           );
         })}
       </nav>
-      <div className="px-2 py-3 border-t border-white/[0.06]">
+      <div className="px-2 py-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         {email && (
-          <p className="px-3 text-[11px] text-white/20 truncate mb-1">{email}</p>
+          <p className="px-3 text-[11px] truncate mb-1" style={{ color: "rgba(255,255,255,0.25)" }}>{email}</p>
         )}
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-2.5 px-3 py-2 rounded-md text-sm text-white/30 hover:text-white hover:bg-white/[0.05] transition-colors"
+          className="flex w-full items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors"
+          style={{ color: "rgba(255,255,255,0.35)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
         >
           <LogOut size={15} />
           Sign out
