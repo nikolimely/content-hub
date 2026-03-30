@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY!);
   const { email } = await req.json();
 
-  const allowedDomain = process.env.ALLOWED_EMAIL_DOMAIN ?? "limely.co.uk";
+  const allowedDomain = "limely.co.uk";
 
   if (typeof email !== "string" || !email.toLowerCase().endsWith(`@${allowedDomain}`)) {
     return NextResponse.json(
