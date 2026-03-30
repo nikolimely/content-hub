@@ -88,6 +88,7 @@ export async function PATCH(
     tone,
     targetAudience,
     externalLinksPath,
+    deployHook,
   } = body;
 
   try {
@@ -110,6 +111,7 @@ export async function PATCH(
         ...(tone !== undefined && { tone: tone || null }),
         ...(targetAudience !== undefined && { targetAudience: targetAudience || null }),
         ...(externalLinksPath !== undefined && { externalLinksPath: externalLinksPath || null }),
+        ...(deployHook !== undefined && { deployHook: deployHook || null }),
     ...(body.imageWidth !== undefined && { imageWidth: body.imageWidth }),
     ...(body.imageHeight !== undefined && { imageHeight: body.imageHeight }),
       },

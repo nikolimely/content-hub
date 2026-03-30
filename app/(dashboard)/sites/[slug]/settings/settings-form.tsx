@@ -28,6 +28,7 @@ type Site = {
   tone: string | null;
   targetAudience: string | null;
   externalLinksPath: string | null;
+  deployHook: string | null;
   model: string;
 };
 
@@ -161,6 +162,7 @@ export function SettingsForm({ site }: { site: Site }) {
   const [tone, setTone] = useState(site.tone ?? "");
   const [targetAudience, setTargetAudience] = useState(site.targetAudience ?? "");
   const [externalLinksPath, setExternalLinksPath] = useState(site.externalLinksPath ?? "");
+  const [deployHook, setDeployHook] = useState(site.deployHook ?? "");
 
   function addContentType() {
     setContentTypes((prev) => [...prev, { label: "", path: "", url: "" }]);
@@ -190,7 +192,7 @@ export function SettingsForm({ site }: { site: Site }) {
         imageHeight: parseInt(imageHeight) || 800,
         authorsPath,
         contentTypes: contentTypes.length > 0 ? JSON.stringify(contentTypes) : null,
-        model, brandVoice, tone, targetAudience, externalLinksPath,
+        model, brandVoice, tone, targetAudience, externalLinksPath, deployHook,
       }),
     });
 
@@ -412,6 +414,12 @@ export function SettingsForm({ site }: { site: Site }) {
               hint="Path to a markdown file in the repo containing curated external links for AI to reference"
             >
               <Input value={externalLinksPath} onChange={setExternalLinksPath} placeholder="cms/external-links.md" monospace />
+            </Field>
+            <Field
+              label="Deploy hook URL"
+              hint="Vercel deploy hook — triggered automatically when a scheduled post becomes due"
+            >
+              <Input value={deployHook} onChange={setDeployHook} placeholder="https://api.vercel.com/v1/integrations/deploy/..." monospace />
             </Field>
           </div>
         </section>
