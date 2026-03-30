@@ -48,15 +48,15 @@ export default function GeneratePage() {
 
   return (
     <div className="p-8 max-w-2xl">
-      <h1 className="text-xl font-semibold text-white mb-6">Generate</h1>
+      <h1 className="text-xl font-semibold text-[#0F172A] mb-6">Generate</h1>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-xs text-white/40 mb-1.5">Site</label>
+          <label className="block text-xs text-[#64748B] mb-1.5 font-medium">Site</label>
           <select
             value={siteId}
             onChange={(e) => setSiteId(e.target.value)}
-            className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-white/30"
+            className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
           >
             <option value="">Select a site...</option>
             {sites.map((s) => (
@@ -67,24 +67,24 @@ export default function GeneratePage() {
 
         {articles.length > 0 && (
           <div>
-            <label className="block text-xs text-white/40 mb-1.5">
+            <label className="block text-xs text-[#64748B] mb-1.5 font-medium">
               Planned articles ({articles.length})
             </label>
             <div className="space-y-1">
               {articles.map((a) => (
                 <label
                   key={a.id}
-                  className="flex items-center gap-3 px-3 py-2.5 bg-[#161616] border border-white/[0.06] rounded-lg cursor-pointer hover:border-white/20 transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 bg-white border border-[#E2E8F0] rounded-lg cursor-pointer hover:border-[#CBD5E1] hover:bg-[#F8FAFC] transition-colors shadow-sm"
                 >
                   <input
                     type="checkbox"
                     checked={selected.includes(a.id)}
                     onChange={() => toggle(a.id)}
-                    className="accent-white"
+                    className="accent-[#A7C838]"
                   />
                   <div>
-                    <p className="text-sm text-white">{a.title}</p>
-                    <p className="text-xs text-white/30">{a.keyword}</p>
+                    <p className="text-sm text-[#0F172A]">{a.title}</p>
+                    <p className="text-xs text-[#94A3B8]">{a.keyword}</p>
                   </div>
                 </label>
               ))}
@@ -93,14 +93,14 @@ export default function GeneratePage() {
         )}
 
         {siteId && articles.length === 0 && (
-          <p className="text-sm text-white/30">No planned articles for this site.</p>
+          <p className="text-sm text-[#94A3B8]">No planned articles for this site.</p>
         )}
 
         {selected.length > 0 && (
           <button
             onClick={handleGenerate}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-white text-black text-sm font-medium rounded-md hover:bg-white/90 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] disabled:opacity-50 transition-colors"
           >
             <Zap size={14} />
             Generate {selected.length} article{selected.length > 1 ? "s" : ""}

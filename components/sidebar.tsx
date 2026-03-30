@@ -30,13 +30,15 @@ export function Sidebar({ email }: { email?: string }) {
 
   return (
     <aside className="w-56 shrink-0 flex flex-col" style={{ backgroundColor: "#2A2944" }}>
-      <div className="h-14 flex items-center px-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="px-5 py-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://imagely.limely.co.uk/wp-content/uploads/logo.svg"
           alt="Limely"
-          style={{ height: 24, width: "auto" }}
+          style={{ height: 26, width: "auto", marginBottom: 10 }}
         />
+        <p className="text-white text-sm font-semibold leading-tight">Content Dashboard</p>
+        <p className="text-xs mt-0.5" style={{ color: "#A7C838" }}>Schedule &amp; Manage Posts</p>
       </div>
       <nav className="flex-1 px-2 py-3 space-y-0.5">
         {nav.map(({ label, href, icon: Icon }) => {

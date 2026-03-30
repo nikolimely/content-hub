@@ -4,11 +4,11 @@ import { Globe, FileText, Clock, CheckCircle, Plus } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const statusColour: Record<string, string> = {
-  planned: "bg-white/10 text-white/60",
-  generating: "bg-blue-500/20 text-blue-400",
-  draft: "bg-yellow-500/20 text-yellow-400",
-  ready: "bg-green-500/20 text-green-400",
-  published: "bg-purple-500/20 text-purple-400",
+  planned: "bg-slate-100 text-slate-500",
+  generating: "bg-blue-50 text-blue-600",
+  draft: "bg-amber-50 text-amber-600",
+  ready: "bg-green-50 text-green-600",
+  published: "bg-purple-50 text-purple-600",
 };
 
 export default async function DashboardPage() {
@@ -37,14 +37,14 @@ export default async function DashboardPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-xl font-semibold text-white">Dashboard</h1>
-          <p className="text-sm text-white/40 mt-0.5">
+          <h1 className="text-xl font-semibold text-[#0F172A]">Dashboard</h1>
+          <p className="text-sm text-[#64748B] mt-0.5">
             Content pipeline overview
           </p>
         </div>
         <Link
           href="/sites/new"
-          className="flex items-center gap-2 px-3 py-2 bg-white text-black text-sm font-medium rounded-md hover:bg-white/90 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] transition-colors"
         >
           <Plus size={14} />
           Add Site
@@ -61,25 +61,25 @@ export default async function DashboardPage() {
         ] as { label: string; value: number; icon: LucideIcon }[]).map(({ label, value, icon: Icon }) => (
           <div
             key={label}
-            className="bg-[#161616] border border-white/[0.06] rounded-lg p-4"
+            className="bg-white border border-[#E2E8F0] rounded-xl p-4 shadow-sm"
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-white/40">{label}</span>
-              <Icon size={14} className="text-white/20" />
+              <span className="text-xs text-[#94A3B8]">{label}</span>
+              <Icon size={14} className="text-[#CBD5E1]" />
             </div>
-            <span className="text-2xl font-semibold text-white">{value}</span>
+            <span className="text-2xl font-semibold text-[#0F172A]">{value}</span>
           </div>
         ))}
       </div>
 
       {/* Sites */}
       {sites.length === 0 ? (
-        <div className="border border-dashed border-white/10 rounded-lg p-12 text-center">
-          <Globe size={32} className="text-white/20 mx-auto mb-3" />
-          <p className="text-white/40 text-sm">No sites yet.</p>
+        <div className="border border-dashed border-[#E2E8F0] rounded-xl p-12 text-center">
+          <Globe size={32} className="text-[#CBD5E1] mx-auto mb-3" />
+          <p className="text-[#94A3B8] text-sm">No sites yet.</p>
           <Link
             href="/sites/new"
-            className="inline-block mt-4 text-sm text-white/60 hover:text-white underline underline-offset-2"
+            className="inline-block mt-4 text-sm text-[#64748B] hover:text-[#0F172A] underline underline-offset-2"
           >
             Add your first site
           </Link>
@@ -99,16 +99,16 @@ export default async function DashboardPage() {
               <Link
                 key={site.id}
                 href={`/sites/${site.slug}`}
-                className="bg-[#161616] border border-white/[0.06] rounded-lg p-5 hover:border-white/20 transition-colors group"
+                className="bg-white border border-[#E2E8F0] rounded-xl p-5 hover:shadow-md hover:border-[#CBD5E1] transition-all group shadow-sm"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h2 className="font-medium text-white group-hover:text-white/90">
+                    <h2 className="font-medium text-[#0F172A]">
                       {site.name}
                     </h2>
-                    <span className="text-xs text-white/30">{site.domain}</span>
+                    <span className="text-xs text-[#94A3B8]">{site.domain}</span>
                   </div>
-                  <span className="text-xs bg-white/[0.06] px-2 py-0.5 rounded text-white/40">
+                  <span className="text-xs bg-[#F1F5F9] px-2 py-0.5 rounded text-[#64748B]">
                     {site.articles.length} articles
                   </span>
                 </div>
@@ -117,13 +117,13 @@ export default async function DashboardPage() {
                   {(Object.entries(byStatus) as [string, number][]).map(([status, count]) => (
                     <span
                       key={status}
-                      className={`text-xs px-2 py-0.5 rounded-full ${statusColour[status] || "bg-white/10 text-white/40"}`}
+                      className={`text-xs px-2 py-0.5 rounded-full ${statusColour[status] || "bg-slate-100 text-slate-500"}`}
                     >
                       {count} {status.charAt(0).toUpperCase() + status.slice(1)}
                     </span>
                   ))}
                   {site.articles.length === 0 && (
-                    <span className="text-xs text-white/20">No articles yet</span>
+                    <span className="text-xs text-[#94A3B8]">No articles yet</span>
                   )}
                 </div>
               </Link>

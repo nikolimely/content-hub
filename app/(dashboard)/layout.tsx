@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar email={session?.email} />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto" style={{ backgroundColor: "#F8FAFC", color: "#0F172A" }}>
         {children}
       </main>
     </div>

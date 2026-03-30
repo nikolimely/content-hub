@@ -4,11 +4,11 @@ import { Plus, ExternalLink } from "lucide-react";
 import { SiteLogo } from "./site-logo";
 
 const statusColour: Record<string, string> = {
-  planned: "bg-white/10 text-white/50",
-  generating: "bg-blue-500/20 text-blue-400",
-  draft: "bg-yellow-500/20 text-yellow-400",
-  ready: "bg-green-500/20 text-green-400",
-  published: "bg-purple-500/20 text-purple-400",
+  planned: "bg-slate-100 text-slate-500",
+  generating: "bg-blue-50 text-blue-600",
+  draft: "bg-amber-50 text-amber-600",
+  ready: "bg-green-50 text-green-600",
+  published: "bg-purple-50 text-purple-600",
 };
 
 export default async function SitesPage() {
@@ -20,17 +20,17 @@ export default async function SitesPage() {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-white">Sites</h1>
+        <h1 className="text-xl font-semibold text-[#0F172A]">Sites</h1>
         <Link
           href="/sites/new"
-          className="flex items-center gap-2 px-3 py-2 bg-white text-black text-sm font-medium rounded-md hover:bg-white/90 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] transition-colors"
         >
           <Plus size={14} /> Add Site
         </Link>
       </div>
 
       {sites.length === 0 ? (
-        <p className="text-sm text-white/30">No sites yet.</p>
+        <p className="text-sm text-[#94A3B8]">No sites yet.</p>
       ) : (
         <div className="grid grid-cols-3 gap-4">
           {sites.map((site) => {
@@ -43,7 +43,7 @@ export default async function SitesPage() {
               <Link
                 key={site.id}
                 href={`/sites/${site.slug}`}
-                className="bg-[#161616] border border-white/[0.06] rounded-xl p-5 hover:border-white/20 transition-colors group flex flex-col gap-4"
+                className="bg-white border border-[#E2E8F0] rounded-xl p-5 hover:shadow-md hover:border-[#CBD5E1] transition-all group flex flex-col gap-4 shadow-sm"
               >
                 {/* Logo + domain */}
                 <div className="flex items-center justify-between">
@@ -54,7 +54,7 @@ export default async function SitesPage() {
                     href={`https://${site.domain}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/20 hover:text-white/60 transition-colors"
+                    className="text-[#CBD5E1] hover:text-[#64748B] transition-colors"
                   >
                     <ExternalLink size={13} />
                   </a>
@@ -62,28 +62,28 @@ export default async function SitesPage() {
 
                 {/* Name + description */}
                 <div>
-                  <p className="text-sm font-medium text-white">{site.name}</p>
+                  <p className="text-sm font-medium text-[#0F172A]">{site.name}</p>
                   {site.description ? (
-                    <p className="text-xs text-white/30 mt-1 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-[#94A3B8] mt-1 leading-relaxed line-clamp-2">
                       {site.description}
                     </p>
                   ) : (
-                    <p className="text-xs text-white/20 mt-0.5">{site.domain}</p>
+                    <p className="text-xs text-[#94A3B8] mt-0.5">{site.domain}</p>
                   )}
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.06]">
+                <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#E2E8F0]">
                   <div className="flex flex-wrap gap-1.5">
                     {(Object.entries(byStatus) as [string, number][])
                       .filter(([s]) => s !== "published")
                       .map(([s, count]) => (
-                        <span key={s} className={`text-xs px-2 py-0.5 rounded-full ${statusColour[s] || "bg-white/10 text-white/40"}`}>
+                        <span key={s} className={`text-xs px-2 py-0.5 rounded-full ${statusColour[s] || "bg-slate-100 text-slate-500"}`}>
                           {count} {s}
                         </span>
                       ))}
                   </div>
-                  <span className="text-xs text-white/20 shrink-0">
+                  <span className="text-xs text-[#94A3B8] shrink-0">
                     {byStatus["published"] ?? 0} published
                   </span>
                 </div>
