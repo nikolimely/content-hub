@@ -96,7 +96,7 @@ export default async function SitesPage() {
                       ))}
                     {scheduled.length > 0 && (
                       <span className="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-600">
-                        {scheduled.length} scheduled
+                        {scheduled.length} scheduled{lastScheduled && ` · last ${lastScheduled.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`}
                       </span>
                     )}
                   </div>
@@ -104,11 +104,6 @@ export default async function SitesPage() {
                     <span className="text-xs text-[#94A3B8] block">
                       {byStatus["published"] ?? 0} published
                     </span>
-                    {lastScheduled && (
-                      <span className="text-xs text-sky-500 block">
-                        last {lastScheduled.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
-                      </span>
-                    )}
                   </div>
                 </div>
               </Link>
