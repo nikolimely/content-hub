@@ -40,7 +40,7 @@ export function AuthorCard({
           <img
             src={author.avatar}
             alt={author.name}
-            className="h-9 w-9 rounded object-cover shrink-0"
+            className="h-9 w-9 rounded object-cover object-top shrink-0"
           />
         ) : (
           <div className="h-9 w-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-sm font-semibold text-[#64748B] shrink-0">
