@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { Plus, ExternalLink } from "lucide-react";
 import { SiteLogo } from "./site-logo";
+import { SyncAllButton } from "./sync-all-button";
 
 const statusColour: Record<string, string> = {
   planned: "bg-slate-100 text-slate-500",
@@ -21,12 +22,15 @@ export default async function SitesPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-[#0F172A]">Sites</h1>
-        <Link
-          href="/sites/new"
-          className="flex items-center gap-2 px-3 py-2 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] transition-colors"
-        >
-          <Plus size={14} /> Add Site
-        </Link>
+        <div className="flex items-center gap-2">
+          <SyncAllButton />
+          <Link
+            href="/sites/new"
+            className="flex items-center gap-2 px-3 py-2 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] transition-colors"
+          >
+            <Plus size={14} /> Add Site
+          </Link>
+        </div>
       </div>
 
       {sites.length === 0 ? (

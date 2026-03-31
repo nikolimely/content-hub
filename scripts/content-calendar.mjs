@@ -62,7 +62,7 @@ async function main() {
   console.log("\n🗓  Content Calendar Generator\n");
 
   // 1. Load sites
-  const sites = await sql`SELECT id, name, domain, "githubRepo", "repoBranch", "brandVoice", tone, "targetAudience", description FROM "Site" ORDER BY name`;
+  const sites = await sql`SELECT id, name, domain, "githubRepo", "repoBranch", "brandVoice", tone, "targetAudience", description, "sitemapUrl" FROM "Site" ORDER BY name`;
   if (!sites.length) { console.log("No sites found."); process.exit(1); }
 
   console.log("Sites:\n");
@@ -123,6 +123,23 @@ cadence: 1 post per week
 
   rl.close();
 
+  // 1b. Fetch sitemap URLs if configured
+  let sitemapUrls = "";
+  if (site.sitemapUrl) {
+    try {
+      console.log(`\nFetching sitemap: ${site.sitemapUrl}`);
+      const res = await fetch(site.sitemapUrl);
+      const xml = await res.text();
+      const urls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1]);
+      if (urls.length) {
+        sitemapUrls = urls.join("\n");
+        console.log(`Found ${urls.length} URLs in sitemap.`);
+      }
+    } catch (e) {
+      console.log(`⚠️  Could not fetch sitemap: ${e.message}`);
+    }
+  }
+
   // 2. Load existing articles
   const existing = await sql`
     SELECT title, keyword, status, category FROM "Article"
@@ -155,7 +172,7 @@ You are an expert SEO content strategist. Generate a ${months}-month content cal
 ${siteContext}
 ${extraContext ? `\n## Additional Site Context\n${extraContext}` : ""}
 
-Already published or planned (do NOT repeat these):
+${sitemapUrls ? `## Live Site Pages (use these for internal link suggestions)\n${sitemapUrls}\n\n` : ""}Already published or planned (do NOT repeat these):
 ${covered}
 
 ---
@@ -187,14 +204,15 @@ List the 5 posts to publish first. Explain why (low competition, high intent mat
 
 ## Planned Articles
 
-Output this JSON block and nothing after it:
+Output this JSON block and nothing after it. Use the planned publish date from the calendar table above (ISO format YYYY-MM-DD):
 
 \`\`\`json
 [
   {
     "title": "...",
     "keyword": "...",
-    "category": "..."
+    "category": "...",
+    "date": "YYYY-MM-DD"
   }
 ]
 \`\`\`
@@ -255,11 +273,12 @@ ${output}
     const slug = slugify(a.title);
     const exists = await sql`SELECT id FROM "Article" WHERE "siteId" = ${site.id} AND slug = ${slug} LIMIT 1`;
     if (exists.length) { skipped++; continue; }
+    const scheduledAt = a.date ? new Date(a.date).toISOString() : null;
     await sql`
-      INSERT INTO "Article" (id, "siteId", title, slug, keyword, category, status, "contentType", "createdAt", "updatedAt")
+      INSERT INTO "Article" (id, "siteId", title, slug, keyword, category, status, "contentType", "scheduledAt", "createdAt", "updatedAt")
       VALUES (
         ${randomId()}, ${site.id}, ${a.title}, ${slug}, ${a.keyword},
-        ${a.category ?? null}, 'planned', 'post', NOW(), NOW()
+        ${a.category ?? null}, 'planned', 'post', ${scheduledAt}, NOW(), NOW()
       )
     `;
     added++;

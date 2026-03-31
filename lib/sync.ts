@@ -30,6 +30,27 @@ function parseAuthorsFile(
     return image.startsWith("http") ? image : `https://${domain}${image}`;
   };
 
+  // JSON authors array (e.g. data/authors.json): [{ slug, name, image, bio, shortBio }]
+  const trimmed = content.trimStart();
+  if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      const items: unknown[] = Array.isArray(parsed) ? parsed : [parsed];
+      for (const item of items) {
+        const a = item as Record<string, unknown>;
+        const name = a.name as string | undefined;
+        const slug = (a.slug as string | undefined) ?? name?.toLowerCase().replace(/\s+/g, "-");
+        if (!name || !slug) continue;
+        const image = a.image as string | undefined;
+        const bio = (a.shortBio ?? a.bio) as string | undefined;
+        results.push({ name, slug, bio: bio ?? null, avatar: resolveAvatar(image) });
+      }
+      return results;
+    } catch {
+      // fall through to TS parsers
+    }
+  }
+
   if (content.includes("firstName:")) {
     // Dynamically-style: { firstName, fullName, slug, image, bio, shortBio }
     const blocks = content.split(/(?=[\s{,]firstName:)/);

@@ -64,7 +64,12 @@ export function ArticleRow({
         {article.author && (
           <span className="text-xs text-[#94A3B8] hidden sm:block">{article.author.name}</span>
         )}
-        {(article.scheduledAt || article.publishedAt) && (
+        {article.status === "planned" && article.scheduledAt && (
+          <span className="text-xs text-[#94A3B8]">
+            {new Date(article.scheduledAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+          </span>
+        )}
+        {article.status !== "planned" && (article.scheduledAt || article.publishedAt) && (
           <span className="text-xs text-[#94A3B8]">
             {new Date(article.scheduledAt ?? article.publishedAt!).toLocaleDateString("en-GB", {
               day: "numeric",

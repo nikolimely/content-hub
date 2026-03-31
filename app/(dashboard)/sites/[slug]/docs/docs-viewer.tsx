@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -78,13 +79,23 @@ export function DocsViewer({
   const [generatedContent, setGeneratedContent] = useState("");
   const [generated, setGenerated] = useState(false);
 
+  const searchParams = useSearchParams();
+
   const loadDocs = useCallback(async () => {
     setLoading(true);
     const res = await fetch(`/api/sites/${siteSlug}/docs`);
     const data = await res.json();
-    setDocs(data.docs ?? []);
+    const loaded: DocFile[] = data.docs ?? [];
+    setDocs(loaded);
     setLoading(false);
-  }, [siteSlug]);
+
+    const fileParam = searchParams.get("file");
+    if (fileParam) {
+      const match = loaded.find((d) => d.path === fileParam);
+      if (match) selectFile(match);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteSlug, searchParams]);
 
   useEffect(() => { loadDocs(); }, [loadDocs]);
 

@@ -56,7 +56,7 @@ export function RecentDocs({ siteSlug }: { siteSlug: string }) {
         {docs.map((doc) => (
           <Link
             key={doc.path}
-            href={`/sites/${siteSlug}/docs`}
+            href={`/sites/${siteSlug}/docs?file=${encodeURIComponent(doc.path)}`}
             className="flex items-start gap-2 p-3 bg-white border border-[#E2E8F0] rounded-lg hover:border-[#CBD5E1] hover:shadow-sm transition-all group shadow-sm"
           >
             <FileText size={13} className="text-[#CBD5E1] shrink-0 mt-0.5 group-hover:text-[#94A3B8] transition-colors" />

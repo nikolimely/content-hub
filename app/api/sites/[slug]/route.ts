@@ -89,6 +89,7 @@ export async function PATCH(
     targetAudience,
     externalLinksPath,
     deployHook,
+    sitemapUrl,
   } = body;
 
   try {
@@ -112,6 +113,7 @@ export async function PATCH(
         ...(targetAudience !== undefined && { targetAudience: targetAudience || null }),
         ...(externalLinksPath !== undefined && { externalLinksPath: externalLinksPath || null }),
         ...(deployHook !== undefined && { deployHook: deployHook || null }),
+        ...(sitemapUrl !== undefined && { sitemapUrl: sitemapUrl || null }),
     ...(body.imageWidth !== undefined && { imageWidth: body.imageWidth }),
     ...(body.imageHeight !== undefined && { imageHeight: body.imageHeight }),
       },

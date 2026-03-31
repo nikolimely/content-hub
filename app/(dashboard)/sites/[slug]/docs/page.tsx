@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { DocsViewer } from "./docs-viewer";
 
 export default async function DocsPage({
@@ -14,5 +15,9 @@ export default async function DocsPage({
   });
   if (!site) notFound();
 
-  return <DocsViewer siteSlug={slug} siteName={site.name} model={site.model} />;
+  return (
+    <Suspense>
+      <DocsViewer siteSlug={slug} siteName={site.name} model={site.model} />
+    </Suspense>
+  );
 }

@@ -29,6 +29,7 @@ type Site = {
   targetAudience: string | null;
   externalLinksPath: string | null;
   deployHook: string | null;
+  sitemapUrl: string | null;
   model: string;
 };
 
@@ -159,6 +160,7 @@ export function SettingsForm({ site }: { site: Site }) {
   const [targetAudience, setTargetAudience] = useState(site.targetAudience ?? "");
   const [externalLinksPath, setExternalLinksPath] = useState(site.externalLinksPath ?? "");
   const [deployHook, setDeployHook] = useState(site.deployHook ?? "");
+  const [sitemapUrl, setSitemapUrl] = useState(site.sitemapUrl ?? "");
 
   function addContentType() {
     setContentTypes((prev) => [...prev, { label: "", path: "", url: "" }]);
@@ -188,7 +190,7 @@ export function SettingsForm({ site }: { site: Site }) {
         imageHeight: parseInt(imageHeight) || 800,
         authorsPath,
         contentTypes: contentTypes.length > 0 ? JSON.stringify(contentTypes) : null,
-        model, brandVoice, tone, targetAudience, externalLinksPath, deployHook,
+        model, brandVoice, tone, targetAudience, externalLinksPath, deployHook, sitemapUrl,
       }),
     });
 
@@ -416,6 +418,12 @@ export function SettingsForm({ site }: { site: Site }) {
               hint="Vercel deploy hook — triggered automatically when a scheduled post becomes due"
             >
               <Input value={deployHook} onChange={setDeployHook} placeholder="https://api.vercel.com/v1/integrations/deploy/..." monospace />
+            </Field>
+            <Field
+              label="Sitemap URL"
+              hint="Used by the content calendar to suggest accurate internal links based on live pages"
+            >
+              <Input value={sitemapUrl} onChange={setSitemapUrl} placeholder="https://dynamically.co.uk/sitemap.xml" monospace />
             </Field>
           </div>
         </section>
