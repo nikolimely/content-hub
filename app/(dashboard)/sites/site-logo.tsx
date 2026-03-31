@@ -14,7 +14,7 @@ export function SiteLogo({ logo, name }: { logo: string | null; name: string }) 
     <img
       src={logo}
       alt={name}
-      className="h-[35px] w-auto max-w-[120px] object-contain"
+      className="h-[22px] w-auto object-contain"
       onError={(e) => {
         const el = e.target as HTMLImageElement;
         el.style.display = "none";
