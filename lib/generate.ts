@@ -73,8 +73,6 @@ description: "<150-160 character meta description including the focus keyword>"
 category: "<most relevant category e.g. SEO, GEO, PPC, Content, Technical SEO>"
 categorySlug: "<lowercase, hyphenated>"
 author: "Paul"
-featuredImage: "/images/blog/featured/${article.slug || "article"}.jpg"
-featuredImageAlt: "<descriptive alt text>"
 ---
 \`\`\`
 
