@@ -23,32 +23,54 @@ function parseAuthorsFile(
   content: string,
   domain: string
 ): { name: string; slug: string; bio: string | null; avatar: string | null }[] {
-  // Works for TS/JS files that define an authors array with firstName, fullName, slug, image, bio, shortBio
   const results: { name: string; slug: string; bio: string | null; avatar: string | null }[] = [];
-  // Split on object boundaries by firstName field
-  const blocks = content.split(/(?=[\s{,]firstName:)/);
-  for (const block of blocks) {
-    const firstName = block.match(/firstName:\s*"([^"]+)"/)?.[1];
-    if (!firstName) continue;
-    const fullName = block.match(/fullName:\s*"([^"]+)"/)?.[1];
-    const slug = block.match(/\bslug:\s*"([^"]+)"/)?.[1];
-    const image = block.match(/\bimage:\s*"([^"]+)"/)?.[1];
-    const shortBio = block.match(/shortBio:\s*"((?:[^"\\]|\\.)*)"/)?.[1];
-    const bio = block.match(/(?<!short)Bio:\s*"((?:[^"\\]|\\.)*)"/)?.[1];
-    const name = fullName || firstName;
-    const rawImage = image ?? null;
-    const avatar = rawImage
-      ? rawImage.startsWith("http")
-        ? rawImage
-        : `https://${domain}${rawImage}`
-      : null;
-    results.push({
-      name,
-      slug: slug || name.toLowerCase().replace(/\s+/g, "-"),
-      bio: shortBio || bio || null,
-      avatar,
-    });
+
+  const resolveAvatar = (image: string | undefined) => {
+    if (!image) return null;
+    return image.startsWith("http") ? image : `https://${domain}${image}`;
+  };
+
+  if (content.includes("firstName:")) {
+    // Dynamically-style: { firstName, fullName, slug, image, bio, shortBio }
+    const blocks = content.split(/(?=[\s{,]firstName:)/);
+    for (const block of blocks) {
+      const firstName = block.match(/firstName:\s*"([^"]+)"/)?.[1];
+      if (!firstName) continue;
+      const fullName = block.match(/fullName:\s*"([^"]+)"/)?.[1];
+      const slug = block.match(/\bslug:\s*"([^"]+)"/)?.[1];
+      const image = block.match(/\bimage:\s*"([^"]+)"/)?.[1];
+      const shortBio = block.match(/shortBio:\s*"((?:[^"\\]|\\.)*)"/)?.[1];
+      const bio = block.match(/(?<!short)Bio:\s*"((?:[^"\\]|\\.)*)"/)?.[1];
+      const name = fullName || firstName;
+      results.push({
+        name,
+        slug: slug || name.toLowerCase().replace(/\s+/g, "-"),
+        bio: shortBio || bio || null,
+        avatar: resolveAvatar(image),
+      });
+    }
+  } else {
+    // Furra-style: { slug, name, image, bio } — extract only from the authors array
+    const authorsArrayMatch = content.match(/export const authors[^=]*=\s*\[([\s\S]*?)\];/);
+    const authorsSection = authorsArrayMatch?.[1] ?? content;
+    // Split on object starts — each author begins with a { on its own or after a comma
+    const blocks = authorsSection.split(/(?=\s*\{)/);
+    for (const block of blocks) {
+      const slug = block.match(/\bslug:\s*"([^"]+)"/)?.[1];
+      const name = block.match(/\bname:\s*"([^"]+)"/)?.[1];
+      if (!slug || !name) continue;
+      const image = block.match(/\bimage:\s*"([^"]+)"/)?.[1];
+      // bio may be a long multi-line string; capture up to the closing quote
+      const bio = block.match(/\bbio:\s*"((?:[^"\\]|\\.)*)"/)?.[1];
+      results.push({
+        name,
+        slug,
+        bio: bio ?? null,
+        avatar: resolveAvatar(image),
+      });
+    }
   }
+
   return results;
 }
 
@@ -240,7 +262,14 @@ export async function syncSiteFromCms(siteId: string): Promise<SyncResult> {
         );
         const fm = content ? parseFrontmatter(content) : {};
         const category = (fm.category as string) || null;
-        const authorName = fm.author as string | undefined;
+        // author may be a plain string or an object with a `name` field
+        const authorRaw = fm.author;
+        const authorName =
+          typeof authorRaw === "string"
+            ? authorRaw
+            : typeof authorRaw === "object" && authorRaw !== null
+              ? ((authorRaw as Record<string, unknown>).name as string | undefined)
+              : undefined;
 
         // Resolve authorId — match by first name (case-insensitive) since frontmatter uses first names
         let authorId: string | null = null;
