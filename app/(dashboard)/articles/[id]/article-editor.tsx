@@ -37,6 +37,7 @@ const statusColour: Record<string, string> = {
   planned: "bg-slate-100 text-slate-500",
   generating: "bg-blue-50 text-blue-600",
   draft: "bg-amber-50 text-amber-600",
+  scheduled: "bg-sky-50 text-sky-600",
   published: "bg-purple-50 text-purple-600",
 };
 
@@ -75,8 +76,13 @@ function getFrontmatterField(raw: string, field: string): string | null {
   return match?.[1] ?? null;
 }
 
+function isScheduled(article: Article): boolean {
+  return article.status === "published" && !!article.scheduledAt && new Date(article.scheduledAt) > new Date();
+}
+
 function getLiveUrl(article: Article): string | null {
   if (article.status !== "published") return null;
+  if (isScheduled(article)) return null;
   try {
     const types = JSON.parse(article.site.contentTypes ?? "[]") as { url?: string }[];
     const urlPath = types[0]?.url;
@@ -298,9 +304,14 @@ export function ArticleEditor({ article }: { article: Article }) {
 
         {/* Right */}
         <div className="flex items-center gap-1 shrink-0 ml-4">
-          <span className={cn("text-xs px-2 py-0.5 rounded-full mr-2", statusColour[status] || "bg-slate-100 text-slate-500")}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}
-          </span>
+          {(() => {
+            const displayStatus = status === "published" && article.scheduledAt && new Date(article.scheduledAt) > new Date() ? "scheduled" : status;
+            return (
+              <span className={cn("text-xs px-2 py-0.5 rounded-full mr-2", statusColour[displayStatus] || "bg-slate-100 text-slate-500")}>
+                {displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}
+              </span>
+            );
+          })()}
 
           {/* Panel toggles */}
           {content && (
