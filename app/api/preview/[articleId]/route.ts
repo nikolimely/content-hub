@@ -8,7 +8,7 @@ function transformFeaturedImage(content: string, articleId: string, baseUrl: str
   return content.replace(
     /^(featuredImage:\s*")(\/.+?)(")/m,
     (_, prefix, path, suffix) => {
-      const proxyUrl = `${baseUrl}/api/articles/${articleId}/assets/proxy?path=${encodeURIComponent("public" + path)}`;
+      const proxyUrl = `${baseUrl}/api/articles/${articleId}/assets/proxy?path=public${path}`;
       return `${prefix}${proxyUrl}${suffix}`;
     }
   );
