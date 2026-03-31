@@ -39,6 +39,14 @@ export default async function SitesPage() {
               return acc;
             }, {} as Record<string, number>);
 
+            const now = new Date();
+            const scheduled = site.articles.filter(
+              (a) => a.status === "published" && a.scheduledAt && a.scheduledAt > now
+            );
+            const lastScheduled = scheduled.length
+              ? new Date(Math.max(...scheduled.map((a) => a.scheduledAt!.getTime())))
+              : null;
+
             return (
               <Link
                 key={site.id}
@@ -82,10 +90,22 @@ export default async function SitesPage() {
                           {count} {s}
                         </span>
                       ))}
+                    {scheduled.length > 0 && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-600">
+                        {scheduled.length} scheduled
+                      </span>
+                    )}
                   </div>
-                  <span className="text-xs text-[#94A3B8] shrink-0">
-                    {byStatus["published"] ?? 0} published
-                  </span>
+                  <div className="text-right shrink-0">
+                    <span className="text-xs text-[#94A3B8] block">
+                      {byStatus["published"] ?? 0} published
+                    </span>
+                    {lastScheduled && (
+                      <span className="text-xs text-sky-500 block">
+                        last {lastScheduled.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </Link>
             );
