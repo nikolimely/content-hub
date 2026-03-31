@@ -42,6 +42,9 @@ next-env.d.ts
 
 /app/generated/prisma
 
+# generated content calendars
+/content-plans
+
 # local sqlite db
 prisma/*.db
 prisma/*.db-journal
