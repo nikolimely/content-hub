@@ -50,22 +50,30 @@ function randomId() {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
+async function ask(question, fallback = "") {
+  const answer = await rl.question(question);
+  return answer.trim() || fallback;
+}
+
 async function main() {
+  // Support CLI args: node content-calendar.mjs [siteNumber] [months] [startFrom]
+  const args = process.argv.slice(2);
+
   console.log("\n🗓  Content Calendar Generator\n");
 
   // 1. Load sites
-  const sites = await sql`SELECT id, name, domain, "brandVoice", tone, "targetAudience", description FROM "Site" ORDER BY name`;
+  const sites = await sql`SELECT id, name, domain, "githubRepo", "repoBranch", "brandVoice", tone, "targetAudience", description FROM "Site" ORDER BY name`;
   if (!sites.length) { console.log("No sites found."); process.exit(1); }
 
   console.log("Sites:\n");
   sites.forEach((s, i) => console.log(`  ${i + 1}. ${s.name} (${s.domain})`));
 
-  const pick = await rl.question("\nChoose a site (number): ");
+  const pick = args[0] ?? await ask("\nChoose a site (number): ");
   const site = sites[parseInt(pick, 10) - 1];
   if (!site) { console.log("Invalid selection."); process.exit(1); }
 
-  const months = await rl.question("How many months? (default: 3): ") || "3";
-  const startFrom = await rl.question("Start from (e.g. April 2026): ") || "next month";
+  const months = args[1] ?? await ask("How many months? (default: 3): ", "3");
+  const startFrom = args[2] ?? await ask("Start from (e.g. April 2026): ", "next month");
 
   // Load or create site context file
   const contextDir = path.join(__dirname, "../content-plans/context");
@@ -258,6 +266,51 @@ ${output}
   }
 
   console.log(`✅ Added ${added} planned articles to Content Hub${skipped ? ` (${skipped} skipped — already exist)` : ""}.`);
+
+  // 7. Commit markdown to the site's GitHub repo
+  if (site.githubRepo && process.env.GITHUB_TOKEN) {
+    const branch = site.repoBranch || "main";
+    const repoPath = `content-plans/${filename}`;
+    const apiUrl = `https://api.github.com/repos/${site.githubRepo}/contents/${repoPath}`;
+    const encoded = Buffer.from(markdown).toString("base64");
+
+    // Check if file already exists (need its SHA to update)
+    let sha;
+    const existing = await fetch(apiUrl, {
+      headers: { Authorization: `token ${process.env.GITHUB_TOKEN}`, Accept: "application/vnd.github+json" },
+    });
+    if (existing.ok) {
+      const data = await existing.json();
+      sha = data.sha;
+    }
+
+    const res = await fetch(apiUrl, {
+      method: "PUT",
+      headers: {
+        Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: `content: add ${months}-month content calendar from ${startFrom}`,
+        content: encoded,
+        branch,
+        ...(sha && { sha }),
+      }),
+    });
+
+    if (res.ok) {
+      console.log(`✅ Committed to ${site.githubRepo}: ${repoPath}`);
+    } else {
+      const err = await res.json();
+      console.log(`⚠️  GitHub commit failed: ${err.message}`);
+    }
+  } else if (!site.githubRepo) {
+    console.log("⚠️  No GitHub repo set for this site — skipping commit.");
+  } else {
+    console.log("⚠️  GITHUB_TOKEN not set — skipping commit.");
+  }
+
   console.log("\nDone.\n");
 }
 
