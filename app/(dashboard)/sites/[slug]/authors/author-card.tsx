@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import { AuthorForm } from "./author-form";
 
 type Author = {
@@ -33,40 +34,30 @@ export function AuthorCard({
   }
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 shadow-sm">
-      <div className="flex items-start gap-3">
-        {author.avatar ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={author.avatar}
-            alt={author.name}
-            className="w-9 rounded object-contain shrink-0"
-          />
-        ) : (
-          <div className="h-9 w-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-sm font-semibold text-[#64748B] shrink-0">
-            {author.name[0]}
-          </div>
-        )}
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[#0F172A]">{author.name}</p>
-          <p className="text-xs text-[#94A3B8]">{author._count.articles} articles</p>
-          {author.bio && (
-            <p className="text-xs text-[#64748B] mt-1 line-clamp-2">{author.bio}</p>
+    <>
+      <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 shadow-sm">
+        <div className="flex items-start gap-3">
+          {author.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={author.avatar}
+              alt={author.name}
+              className="w-9 rounded object-contain shrink-0"
+            />
+          ) : (
+            <div className="h-9 w-9 rounded bg-[#F1F5F9] flex items-center justify-center text-sm font-semibold text-[#64748B] shrink-0">
+              {author.name[0]}
+            </div>
           )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-[#0F172A]">{author.name}</p>
+            <p className="text-xs text-[#94A3B8]">{author._count.articles} articles</p>
+            {author.bio && (
+              <p className="text-xs text-[#64748B] mt-1 line-clamp-2">{author.bio}</p>
+            )}
+          </div>
         </div>
-      </div>
 
-      {editing ? (
-        <div className="mt-4 pt-4 border-t border-[#E2E8F0]">
-          <AuthorForm siteId={author.siteId} siteSlug={siteSlug} author={author} />
-          <button
-            onClick={() => setEditing(false)}
-            className="mt-2 text-xs text-[#94A3B8] hover:text-[#475569] transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      ) : (
         <div className="flex items-center gap-3 mt-3 pt-3 border-t border-[#E2E8F0]">
           <button
             onClick={() => setEditing(true)}
@@ -82,7 +73,33 @@ export function AuthorCard({
             Delete
           </button>
         </div>
+      </div>
+
+      {editing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setEditing(false)}>
+          <div className="absolute inset-0 bg-black/20" />
+          <div
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-sm font-semibold text-[#0F172A]">Edit Author</h2>
+              <button
+                onClick={() => setEditing(false)}
+                className="text-[#94A3B8] hover:text-[#475569] transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <AuthorForm
+              siteId={author.siteId}
+              siteSlug={siteSlug}
+              author={author}
+              onSaved={() => setEditing(false)}
+            />
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 }
