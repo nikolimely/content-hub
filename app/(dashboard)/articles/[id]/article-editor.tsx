@@ -112,6 +112,7 @@ export function ArticleEditor({ article }: { article: Article }) {
   const [aiEditing, setAiEditing] = useState(false);
   const [showFeaturedPicker, setShowFeaturedPicker] = useState(false);
   const [uploadingFeatured, setUploadingFeatured] = useState(false);
+  const [heroImageBust, setHeroImageBust] = useState(0);
 
   useEffect(() => {
     if (article.status === "generating" && !article.content) startGeneration();
@@ -212,6 +213,7 @@ export function ArticleEditor({ article }: { article: Article }) {
     const updated = setFrontmatterField(content, "featuredImage", path);
     const withAlt = setFrontmatterField(updated, "featuredImageAlt", alt);
     setContent(withAlt);
+    setHeroImageBust((n) => n + 1);
     // Persist to DB
     await fetch(`/api/articles/${article.id}`, {
       method: "PATCH",
@@ -256,7 +258,7 @@ export function ArticleEditor({ article }: { article: Article }) {
   const heroImageSrc = rawHero
     ? rawHero.startsWith("http")
       ? rawHero
-      : `/api/articles/${article.id}/assets/proxy?path=${encodeURIComponent("public" + rawHero)}`
+      : `/api/articles/${article.id}/assets/proxy?path=${encodeURIComponent("public" + rawHero)}${heroImageBust ? `&bust=${heroImageBust}` : ""}`
     : null;
   const metaDescription = getFrontmatterField(content, "description");
   const liveUrl = getLiveUrl(article);
