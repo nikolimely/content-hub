@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const SESSION_COOKIE = "content_hub_session";
-const PUBLIC_PREFIXES = ["/login", "/api/auth/"];
+const PUBLIC_PREFIXES = ["/login", "/api/auth/", "/api/preview/"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
