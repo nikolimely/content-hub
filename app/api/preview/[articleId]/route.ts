@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-function transformFeaturedImage(content: string, githubRepo: string, repoBranch: string): string {
-  // Replace relative featuredImage paths with absolute raw GitHub URLs so preview
-  // works before the target site has redeployed with the new image.
+function transformFeaturedImage(content: string, articleId: string, baseUrl: string): string {
+  // Replace relative featuredImage paths with absolute Content Hub proxy URLs.
+  // The proxy authenticates with GitHub server-side, so this works for private repos
+  // and before the target site has redeployed with the new image.
   return content.replace(
     /^(featuredImage:\s*")(\/.+?)(")/m,
     (_, prefix, path, suffix) => {
-      const absolute = `https://raw.githubusercontent.com/${githubRepo}/${repoBranch}/public${path}`;
-      return `${prefix}${absolute}${suffix}`;
+      const proxyUrl = `${baseUrl}/api/articles/${articleId}/assets/proxy?path=${encodeURIComponent("public" + path)}`;
+      return `${prefix}${proxyUrl}${suffix}`;
     }
   );
 }
@@ -33,11 +34,8 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const content = transformFeaturedImage(
-    article.content,
-    article.site.githubRepo,
-    article.site.repoBranch
-  );
+  const baseUrl = process.env.NEXT_PUBLIC_URL ?? "https://content.limely.co.uk";
+  const content = transformFeaturedImage(article.content, articleId, baseUrl);
 
   return NextResponse.json({
     id: article.id,
