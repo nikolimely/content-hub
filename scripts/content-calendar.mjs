@@ -73,15 +73,22 @@ async function main() {
   const contextPath = path.join(contextDir, `${slugify(site.domain)}.md`);
 
   let extraContext = "";
+  let cadence = "1 post per week";
   if (fs.existsSync(contextPath)) {
     extraContext = fs.readFileSync(contextPath, "utf-8");
+    const cadenceMatch = extraContext.match(/^cadence:\s*(.+)$/m);
+    if (cadenceMatch) cadence = cadenceMatch[1].trim();
     console.log(`\nLoaded site context from: content-plans/context/${slugify(site.domain)}.md`);
+    console.log(`Publishing cadence: ${cadence}`);
   } else {
     console.log(`\nNo context file found. Creating one at: content-plans/context/${slugify(site.domain)}.md`);
-    console.log("Edit this file to add brand notes, target audience details, competitor info, etc.");
+    console.log("Edit this file to configure cadence, brand notes, competitors, etc.");
     fs.writeFileSync(contextPath, `# Site Context — ${site.name} (${site.domain})
-<!-- Edit this file to give the AI richer context about this site. -->
-<!-- It will be included in every content calendar run for this site. -->
+# Edit this file to give the AI richer context. It is read on every calendar run.
+
+## Config
+cadence: 1 post per week
+# Examples: "1 post per working day", "3 posts per week", "2 posts per week", "4 posts per month"
 
 ## About the Site
 
@@ -120,7 +127,7 @@ async function main() {
   hr();
   console.log(`Site: ${site.name} (${site.domain})`);
   console.log(`Existing articles: ${existing.length}`);
-  console.log(`Generating: ${months}-month calendar from ${startFrom}`);
+  console.log(`Generating: ${months}-month calendar from ${startFrom} (${cadence})`);
   hr();
   console.log("⏳ Running research and building calendar...\n");
 
@@ -155,7 +162,7 @@ Include a brief "Fit" note explaining why this suits the site.
 
 ## Content Calendar
 
-One post per week for ${months} months. Use this table format:
+Publishing cadence: **${cadence}**. Plan all posts for ${months} months at this cadence. Use this table format:
 
 | Week | Date | Title | Keyword | Type | Words | Priority |
 |------|------|-------|---------|------|-------|----------|
@@ -204,6 +211,7 @@ domain: ${site.domain}
 generated: ${timestamp}
 months: ${months}
 startFrom: ${startFrom}
+cadence: ${cadence}
 existingArticles: ${existing.length}
 ---
 
