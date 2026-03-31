@@ -13,12 +13,13 @@ export async function POST(
     type: "selection" | "full";
   };
 
-  const article = await db.article.findUnique({
-    where: { id },
-    include: { site: true },
-  });
+  const [article, globalSettings] = await Promise.all([
+    db.article.findUnique({ where: { id }, include: { site: true } }),
+    db.settings.findUnique({ where: { id: "global" } }),
+  ]);
 
   const model = article?.site?.model || "claude-sonnet-4-6";
+  const globalRules = globalSettings?.systemPrompt ?? "";
 
   const prompt =
     type === "selection"
@@ -27,13 +28,13 @@ export async function POST(
 Text to rewrite:
 ${selectedText}
 
-Return ONLY the rewritten text — no explanation, no preamble, no surrounding quotes. Preserve markdown formatting (bold, italic, links, headings) where appropriate.`
+Return ONLY the rewritten text — no explanation, no preamble, no surrounding quotes. Preserve markdown formatting (bold, italic, links, headings) where appropriate.${globalRules ? `\n\nGlobal writing rules (always follow):\n${globalRules}` : ""}`
       : `Edit the following article according to this instruction: "${instruction}"
 
 Article:
 ${selectedText}
 
-Return ONLY the edited article content. Preserve the frontmatter block (--- ... ---) exactly as-is unless the instruction specifically requires changing it. Preserve all markdown formatting.`;
+Return ONLY the edited article content. Preserve the frontmatter block (--- ... ---) exactly as-is unless the instruction specifically requires changing it. Preserve all markdown formatting.${globalRules ? `\n\nGlobal writing rules (always follow):\n${globalRules}` : ""}`;
 
   const encoder = new TextEncoder();
 

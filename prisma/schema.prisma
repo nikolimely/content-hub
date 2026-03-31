@@ -49,6 +49,11 @@ model Author {
   @@unique([siteId, slug])
 }
 
+model Settings {
+  id           String  @id @default("global")
+  systemPrompt String?
+}
+
 model Article {
   id          String   @id @default(cuid())
   siteId      String

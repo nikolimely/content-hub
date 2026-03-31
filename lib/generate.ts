@@ -46,7 +46,8 @@ function buildPrompt(
   site: Site,
   article: ArticleInput,
   internalLinks: string,
-  externalLinks: string
+  externalLinks: string,
+  globalRules: string
 ): string {
   const today = new Date().toISOString().split("T")[0];
 
@@ -97,20 +98,22 @@ ${externalLinks ? `**External references (use 1–2 if genuinely relevant):**\n$
 **Example of correct opening style** (notice: no H1, jumps straight into substance):
 "Topical authority is the degree to which search engines — and increasingly AI answer engines — recognise your website as a credible, comprehensive source on a particular subject. It is not a single metric you can check in a dashboard..."
 
-Output ONLY the MDX — no explanation, no preamble, no code fences around the whole thing. Start with ---.`;
+Output ONLY the MDX — no explanation, no preamble, no code fences around the whole thing. Start with ---.
+${globalRules ? `\n**Global writing rules (always follow these):**\n${globalRules}` : ""}`;
 }
 
 export async function generateArticleStream(
   site: Site,
   article: ArticleInput,
-  onChunk: (text: string) => void
+  onChunk: (text: string) => void,
+  globalRules = ""
 ): Promise<string> {
   const [internalLinks, externalLinks] = await Promise.all([
     readExistingContent(site),
     readExternalLinks(site),
   ]);
 
-  const prompt = buildPrompt(site, article, internalLinks, externalLinks);
+  const prompt = buildPrompt(site, article, internalLinks, externalLinks, globalRules);
   let fullContent = "";
 
   await streamText(site.model || "claude-sonnet-4-6", prompt, 4096, (text) => {

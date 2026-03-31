@@ -8,10 +8,10 @@ export async function POST(
 ) {
   const { id } = await params;
 
-  const article = await db.article.findUnique({
-    where: { id },
-    include: { site: true },
-  });
+  const [article, globalSettings] = await Promise.all([
+    db.article.findUnique({ where: { id }, include: { site: true } }),
+    db.settings.findUnique({ where: { id: "global" } }),
+  ]);
 
   if (!article) {
     return NextResponse.json({ error: "Article not found" }, { status: 404 });
@@ -38,7 +38,8 @@ export async function POST(
             controller.enqueue(
               encoder.encode(`data: ${JSON.stringify({ text: chunk })}\n\n`)
             );
-          }
+          },
+          globalSettings?.systemPrompt ?? ""
         );
 
         // Fix double heading markers (e.g. "## ### Step 1:" → "### Step 1:")
