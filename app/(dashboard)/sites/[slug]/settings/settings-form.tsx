@@ -52,9 +52,9 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-white/50 mb-1.5">{label}</label>
+      <label className="block text-xs font-medium text-[#64748B] mb-1.5">{label}</label>
       {children}
-      {hint && <p className="mt-1 text-[11px] text-white/25">{hint}</p>}
+      {hint && <p className="mt-1 text-[11px] text-[#94A3B8]">{hint}</p>}
     </div>
   );
 }
@@ -76,7 +76,7 @@ function Input({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       className={cn(
-        "w-full bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/25 transition-colors",
+        "w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors",
         monospace && "font-mono text-xs"
       )}
     />
@@ -100,7 +100,7 @@ function Textarea({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/25 transition-colors resize-none"
+      className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors resize-none"
     />
   );
 }
@@ -108,8 +108,8 @@ function Textarea({
 function SectionHeader({ title, description }: { title: string; description?: string }) {
   return (
     <div className="mb-4">
-      <h2 className="text-sm font-semibold text-white">{title}</h2>
-      {description && <p className="text-xs text-white/30 mt-0.5">{description}</p>}
+      <h2 className="text-sm font-semibold text-[#0F172A]">{title}</h2>
+      {description && <p className="text-xs text-[#64748B] mt-0.5">{description}</p>}
     </div>
   );
 }
@@ -135,14 +135,12 @@ export function SettingsForm({ site }: { site: Site }) {
     error: null,
   });
 
-  // Site details
   const [name, setName] = useState(site.name);
   const [domain, setDomain] = useState(site.domain);
   const [description, setDescription] = useState(site.description ?? "");
   const [logo, setLogo] = useState(site.logo ?? "");
   const [faviconUrl, setFaviconUrl] = useState(site.faviconUrl ?? "");
 
-  // Repository
   const [githubRepo, setGithubRepo] = useState(site.githubRepo);
   const [repoBranch, setRepoBranch] = useState(site.repoBranch);
   const [contentPath, setContentPath] = useState(site.contentPath);
@@ -151,12 +149,10 @@ export function SettingsForm({ site }: { site: Site }) {
   const [imageHeight, setImageHeight] = useState(String(site.imageHeight ?? 800));
   const [authorsPath, setAuthorsPath] = useState(site.authorsPath ?? "");
 
-  // Content types
   const [contentTypes, setContentTypes] = useState<ContentType[]>(
     parseContentTypes(site.contentTypes)
   );
 
-  // Writing / AI
   const [model, setModel] = useState(site.model ?? "claude-sonnet-4-6");
   const [brandVoice, setBrandVoice] = useState(site.brandVoice ?? "");
   const [tone, setTone] = useState(site.tone ?? "");
@@ -224,19 +220,19 @@ export function SettingsForm({ site }: { site: Site }) {
         <div className="flex items-center gap-3">
           <Link
             href={`/sites/${site.slug}`}
-            className="text-white/40 hover:text-white transition-colors"
+            className="text-[#94A3B8] hover:text-[#475569] transition-colors"
           >
             <ArrowLeft size={16} />
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-white">{site.name} — Settings</h1>
-            <p className="text-xs text-white/30">{site.domain}</p>
+            <h1 className="text-lg font-semibold text-[#0F172A]">{site.name} — Settings</h1>
+            <p className="text-xs text-[#94A3B8]">{site.domain}</p>
           </div>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium bg-white text-black hover:bg-white/90 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#2A2944] text-white hover:bg-[#1e1e38] disabled:opacity-50 transition-colors"
         >
           {saving ? <><Loader2 size={12} className="animate-spin" /> Saving...</> : <><Save size={12} /> Save changes</>}
         </button>
@@ -269,7 +265,7 @@ export function SettingsForm({ site }: { site: Site }) {
           </div>
         </section>
 
-        <hr className="border-white/[0.06]" />
+        <hr className="border-[#E2E8F0]" />
 
         {/* Repository */}
         <section>
@@ -308,7 +304,7 @@ export function SettingsForm({ site }: { site: Site }) {
           </div>
         </section>
 
-        <hr className="border-white/[0.06]" />
+        <hr className="border-[#E2E8F0]" />
 
         {/* Content types */}
         <section>
@@ -320,7 +316,7 @@ export function SettingsForm({ site }: { site: Site }) {
             {contentTypes.length > 0 && (
               <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 mb-1">
                 {["Label", "Path", "URL prefix", ""].map((h) => (
-                  <p key={h} className="text-[11px] text-white/30 px-1">{h}</p>
+                  <p key={h} className="text-[11px] text-[#94A3B8] px-1">{h}</p>
                 ))}
               </div>
             )}
@@ -330,23 +326,23 @@ export function SettingsForm({ site }: { site: Site }) {
                   value={ct.label}
                   onChange={(e) => updateContentType(i, "label", e.target.value)}
                   placeholder="Posts"
-                  className="bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-xs text-white placeholder-white/20 focus:outline-none focus:border-white/25 font-mono"
+                  className="bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-xs text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] font-mono transition-colors"
                 />
                 <input
                   value={ct.path}
                   onChange={(e) => updateContentType(i, "path", e.target.value)}
                   placeholder="src/content/blog"
-                  className="bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-xs text-white placeholder-white/20 focus:outline-none focus:border-white/25 font-mono"
+                  className="bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-xs text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] font-mono transition-colors"
                 />
                 <input
                   value={ct.url}
                   onChange={(e) => updateContentType(i, "url", e.target.value)}
                   placeholder="/insights"
-                  className="bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-xs text-white placeholder-white/20 focus:outline-none focus:border-white/25 font-mono"
+                  className="bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-xs text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] font-mono transition-colors"
                 />
                 <button
                   onClick={() => removeContentType(i)}
-                  className="p-1.5 text-white/20 hover:text-red-400 transition-colors"
+                  className="p-1.5 text-[#CBD5E1] hover:text-red-400 transition-colors"
                 >
                   <Trash2 size={13} />
                 </button>
@@ -354,14 +350,14 @@ export function SettingsForm({ site }: { site: Site }) {
             ))}
             <button
               onClick={addContentType}
-              className="flex items-center gap-1.5 text-xs text-white/30 hover:text-white transition-colors mt-1"
+              className="flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-colors mt-1"
             >
               <Plus size={13} /> Add content type
             </button>
           </div>
         </section>
 
-        <hr className="border-white/[0.06]" />
+        <hr className="border-[#E2E8F0]" />
 
         {/* Writing / AI */}
         <section>
@@ -380,13 +376,13 @@ export function SettingsForm({ site }: { site: Site }) {
                     className={cn(
                       "flex items-center justify-between px-3 py-2.5 rounded-lg border text-left transition-colors",
                       model === m.value
-                        ? "bg-white/10 border-white/25 text-white"
-                        : "bg-[#1a1a1a] border-white/[0.08] text-white/40 hover:text-white hover:border-white/20"
+                        ? "bg-[#2A2944] border-[#2A2944] text-white"
+                        : "bg-white border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] hover:border-[#CBD5E1]"
                     )}
                   >
                     <div>
                       <p className="text-xs font-medium">{m.label}</p>
-                      <p className="text-[11px] text-white/30 mt-0.5">{m.provider === "anthropic" ? "Anthropic" : "OpenAI"}</p>
+                      <p className={cn("text-[11px] mt-0.5", model === m.value ? "text-white/60" : "text-[#94A3B8]")}>{m.provider === "anthropic" ? "Anthropic" : "OpenAI"}</p>
                     </div>
                     {model === m.value && <Check size={13} className="text-white shrink-0" />}
                   </button>
@@ -426,11 +422,11 @@ export function SettingsForm({ site }: { site: Site }) {
       </div>
 
       {/* Bottom save */}
-      <div className="mt-10 pt-6 border-t border-white/[0.06] flex justify-end">
+      <div className="mt-10 pt-6 border-t border-[#E2E8F0] flex justify-end">
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-1.5 px-4 py-2 rounded text-sm font-medium bg-white text-black hover:bg-white/90 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-[#2A2944] text-white hover:bg-[#1e1e38] disabled:opacity-50 transition-colors"
         >
           {saving ? <><Loader2 size={13} className="animate-spin" /> Saving...</> : <><Save size={13} /> Save changes</>}
         </button>
@@ -438,12 +434,12 @@ export function SettingsForm({ site }: { site: Site }) {
 
       {/* Save status panel */}
       {saveStatus.show && (
-        <div className="fixed bottom-6 right-6 w-80 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
-            <span className="text-xs font-medium text-white">Save status</span>
+        <div className="fixed bottom-6 right-6 w-80 bg-white border border-[#E2E8F0] rounded-xl shadow-xl overflow-hidden z-50">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#E2E8F0]">
+            <span className="text-xs font-medium text-[#0F172A]">Save status</span>
             <button
               onClick={() => setSaveStatus((s) => ({ ...s, show: false }))}
-              className="text-white/30 hover:text-white transition-colors"
+              className="text-[#94A3B8] hover:text-[#475569] transition-colors"
             >
               <X size={13} />
             </button>
@@ -454,16 +450,16 @@ export function SettingsForm({ site }: { site: Site }) {
             <div className="flex items-center gap-3">
               <div className={cn(
                 "w-6 h-6 rounded-full flex items-center justify-center shrink-0",
-                saveStatus.db === "saving" ? "bg-white/10" :
-                saveStatus.db === "done" ? "bg-green-500/20" : "bg-red-500/20"
+                saveStatus.db === "saving" ? "bg-[#F1F5F9]" :
+                saveStatus.db === "done" ? "bg-green-50" : "bg-red-50"
               )}>
-                {saveStatus.db === "saving" ? <Loader2 size={11} className="animate-spin text-white/50" /> :
-                 saveStatus.db === "done" ? <Check size={11} className="text-green-400" /> :
-                 <AlertCircle size={11} className="text-red-400" />}
+                {saveStatus.db === "saving" ? <Loader2 size={11} className="animate-spin text-[#94A3B8]" /> :
+                 saveStatus.db === "done" ? <Check size={11} className="text-green-500" /> :
+                 <AlertCircle size={11} className="text-red-500" />}
               </div>
               <div>
-                <p className="text-xs text-white/80">Database</p>
-                <p className="text-[11px] text-white/30">
+                <p className="text-xs text-[#0F172A]">Database</p>
+                <p className="text-[11px] text-[#94A3B8]">
                   {saveStatus.db === "saving" ? "Saving settings..." :
                    saveStatus.db === "done" ? "Settings saved" : "Save failed"}
                 </p>
@@ -474,18 +470,18 @@ export function SettingsForm({ site }: { site: Site }) {
             <div className="flex items-center gap-3">
               <div className={cn(
                 "w-6 h-6 rounded-full flex items-center justify-center shrink-0",
-                saveStatus.repo === "idle" ? "bg-white/[0.04]" :
-                saveStatus.repo === "saving" ? "bg-white/10" :
-                saveStatus.repo === "done" ? "bg-green-500/20" : "bg-yellow-500/20"
+                saveStatus.repo === "idle" ? "bg-[#F8FAFC]" :
+                saveStatus.repo === "saving" ? "bg-[#F1F5F9]" :
+                saveStatus.repo === "done" ? "bg-green-50" : "bg-amber-50"
               )}>
-                {saveStatus.repo === "idle" ? <GitCommit size={11} className="text-white/20" /> :
-                 saveStatus.repo === "saving" ? <Loader2 size={11} className="animate-spin text-white/50" /> :
-                 saveStatus.repo === "done" ? <Check size={11} className="text-green-400" /> :
-                 <AlertCircle size={11} className="text-yellow-400" />}
+                {saveStatus.repo === "idle" ? <GitCommit size={11} className="text-[#CBD5E1]" /> :
+                 saveStatus.repo === "saving" ? <Loader2 size={11} className="animate-spin text-[#94A3B8]" /> :
+                 saveStatus.repo === "done" ? <Check size={11} className="text-green-500" /> :
+                 <AlertCircle size={11} className="text-amber-500" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-white/80">GitHub — cms/settings.md</p>
-                <p className="text-[11px] text-white/30 truncate">
+                <p className="text-xs text-[#0F172A]">GitHub — cms/settings.md</p>
+                <p className="text-[11px] text-[#94A3B8] truncate">
                   {saveStatus.repo === "idle" ? "Waiting..." :
                    saveStatus.repo === "saving" ? "Committing..." :
                    saveStatus.repo === "done" && saveStatus.commitSha
@@ -498,7 +494,7 @@ export function SettingsForm({ site }: { site: Site }) {
                   href={saveStatus.commitUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/20 hover:text-white/60 transition-colors shrink-0"
+                  className="text-[#CBD5E1] hover:text-[#64748B] transition-colors shrink-0"
                 >
                   <ExternalLink size={12} />
                 </a>

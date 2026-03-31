@@ -21,7 +21,6 @@ export function RecentDocs({ siteSlug }: { siteSlug: string }) {
     fetch(`/api/sites/${siteSlug}/docs`)
       .then((r) => r.json())
       .then((data) => {
-        // Only show audits (files inside audits/ folder), most recent first (sorted by name desc)
         const audits = (data.docs ?? [] as DocFile[]).filter((d: DocFile) =>
           d.label.startsWith("audits/")
         );
@@ -33,7 +32,7 @@ export function RecentDocs({ siteSlug }: { siteSlug: string }) {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-white/20 text-xs mb-6">
+      <div className="flex items-center gap-2 text-[#94A3B8] text-xs mb-6">
         <Loader2 size={11} className="animate-spin" />
         Loading docs...
       </div>
@@ -45,10 +44,10 @@ export function RecentDocs({ siteSlug }: { siteSlug: string }) {
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-white/25 font-medium uppercase tracking-wider">Recent Audits</span>
+        <span className="text-xs text-[#94A3B8] font-medium uppercase tracking-wider">Recent Audits</span>
         <Link
           href={`/sites/${siteSlug}/docs`}
-          className="text-xs text-white/25 hover:text-white/60 transition-colors flex items-center gap-1"
+          className="text-xs text-[#94A3B8] hover:text-[#475569] transition-colors flex items-center gap-1"
         >
           View all <ChevronRight size={11} />
         </Link>
@@ -58,10 +57,10 @@ export function RecentDocs({ siteSlug }: { siteSlug: string }) {
           <Link
             key={doc.path}
             href={`/sites/${siteSlug}/docs`}
-            className="flex items-start gap-2 p-3 bg-[#161616] border border-white/[0.06] rounded-lg hover:border-white/20 transition-colors group"
+            className="flex items-start gap-2 p-3 bg-white border border-[#E2E8F0] rounded-lg hover:border-[#CBD5E1] hover:shadow-sm transition-all group shadow-sm"
           >
-            <FileText size={13} className="text-white/20 shrink-0 mt-0.5 group-hover:text-white/40 transition-colors" />
-            <span className="text-xs text-white/40 group-hover:text-white/60 transition-colors leading-snug truncate">
+            <FileText size={13} className="text-[#CBD5E1] shrink-0 mt-0.5 group-hover:text-[#94A3B8] transition-colors" />
+            <span className="text-xs text-[#64748B] group-hover:text-[#475569] transition-colors leading-snug truncate">
               {fileLabel(doc.name)}
             </span>
           </Link>

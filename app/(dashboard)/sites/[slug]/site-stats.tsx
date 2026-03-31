@@ -31,33 +31,33 @@ export function SiteStats({
       key: "published",
       label: "Live",
       count: counts.published ?? 0,
-      accentClass: "text-purple-400",
-      activeClass: "bg-purple-500/15 border-purple-400/50 shadow-[0_0_0_1px_rgba(168,85,247,0.3)]",
+      accentClass: "text-purple-600",
+      activeClass: "bg-purple-50 border-purple-200 shadow-sm",
       dotClass: "bg-purple-400",
     },
     {
       key: "scheduled",
       label: "Scheduled",
       count: scheduledCount,
-      accentClass: "text-blue-400",
-      activeClass: "bg-blue-500/15 border-blue-400/50 shadow-[0_0_0_1px_rgba(96,165,250,0.3)]",
+      accentClass: "text-blue-600",
+      activeClass: "bg-blue-50 border-blue-200 shadow-sm",
       dotClass: "bg-blue-400",
     },
     {
       key: "draft",
       label: "Draft",
       count: counts.draft ?? 0,
-      accentClass: "text-yellow-400",
-      activeClass: "bg-yellow-500/15 border-yellow-400/50 shadow-[0_0_0_1px_rgba(250,204,21,0.3)]",
-      dotClass: "bg-yellow-400",
+      accentClass: "text-amber-600",
+      activeClass: "bg-amber-50 border-amber-200 shadow-sm",
+      dotClass: "bg-amber-400",
     },
     {
       key: "planned",
       label: "Planned",
       count: counts.planned ?? 0,
-      accentClass: "text-white/50",
-      activeClass: "bg-white/10 border-white/30 shadow-[0_0_0_1px_rgba(255,255,255,0.15)]",
-      dotClass: "bg-white/60",
+      accentClass: "text-slate-600",
+      activeClass: "bg-slate-50 border-slate-300 shadow-sm",
+      dotClass: "bg-slate-400",
     },
   ];
 
@@ -83,7 +83,7 @@ export function SiteStats({
               "relative flex flex-col items-start p-4 rounded-xl border transition-all text-left cursor-pointer",
               isActive
                 ? stat.activeClass
-                : "bg-[#111] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.03]"
+                : "bg-white border-[#E2E8F0] hover:border-[#CBD5E1] hover:bg-[#F8FAFC] shadow-sm"
             )}
           >
             {isActive && (
@@ -92,7 +92,7 @@ export function SiteStats({
             <span
               className={cn(
                 "text-2xl font-semibold tabular-nums mb-1 transition-colors",
-                isActive ? stat.accentClass : "text-white/60"
+                isActive ? stat.accentClass : "text-[#94A3B8]"
               )}
             >
               {stat.count}
@@ -100,7 +100,7 @@ export function SiteStats({
             <span
               className={cn(
                 "text-xs font-medium transition-colors",
-                isActive ? "text-white/70" : "text-white/30"
+                isActive ? "text-[#475569]" : "text-[#94A3B8]"
               )}
             >
               {stat.label}

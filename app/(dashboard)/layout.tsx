@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/sidebar";
+import { DashboardHeader } from "@/components/dashboard-header";
 import { getSession } from "@/lib/auth";
 
 export default async function DashboardLayout({
@@ -11,9 +12,12 @@ export default async function DashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar email={session?.email} />
-      <main className="flex-1 overflow-y-auto" style={{ backgroundColor: "#F8FAFC", color: "#0F172A" }}>
-        {children}
-      </main>
+      <div className="flex-1 flex flex-col overflow-hidden" style={{ backgroundColor: "#F8FAFC", color: "#0F172A" }}>
+        <DashboardHeader email={session?.email} />
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

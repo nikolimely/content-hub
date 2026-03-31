@@ -42,39 +42,39 @@ export function AuthorForm({
     <form onSubmit={handleSubmit} className="space-y-3 max-w-lg">
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-white/40 mb-1">Name</label>
+          <label className="block text-xs text-[#64748B] mb-1 font-medium">Name</label>
           <input
             name="name"
             required
             defaultValue={author?.name}
             placeholder="Jane Smith"
-            className="w-full bg-[#161616] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
+            className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
           />
         </div>
         <div>
-          <label className="block text-xs text-white/40 mb-1">Avatar URL (optional)</label>
+          <label className="block text-xs text-[#64748B] mb-1 font-medium">Avatar URL (optional)</label>
           <input
             name="avatar"
             defaultValue={author?.avatar ?? ""}
             placeholder="https://..."
-            className="w-full bg-[#161616] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
+            className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
           />
         </div>
       </div>
       <div>
-        <label className="block text-xs text-white/40 mb-1">Bio (optional)</label>
+        <label className="block text-xs text-[#64748B] mb-1 font-medium">Bio (optional)</label>
         <textarea
           name="bio"
           defaultValue={author?.bio ?? ""}
           rows={2}
           placeholder="Short author bio..."
-          className="w-full bg-[#161616] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 resize-none"
+          className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors resize-none"
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="px-3 py-1.5 bg-white text-black text-sm font-medium rounded hover:bg-white/90 disabled:opacity-50 transition-colors"
+        className="px-3 py-1.5 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] disabled:opacity-50 transition-colors"
       >
         {loading ? "Saving..." : author ? "Save" : "Add Author"}
       </button>

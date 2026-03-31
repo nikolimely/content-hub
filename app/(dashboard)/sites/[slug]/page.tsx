@@ -42,9 +42,6 @@ export default async function SitePage({
     {} as Record<string, number>
   );
 
-  // "published" count should only reflect articles actually live (past date)
-  // scheduled count handled separately below
-
   const now = new Date();
   const isLive = (a: { status: string; scheduledAt: Date | null }) =>
     a.status === "published" && (!a.scheduledAt || new Date(a.scheduledAt) <= now);
@@ -57,7 +54,6 @@ export default async function SitePage({
     new Set(site.articles.map((a) => a.category).filter(Boolean))
   ) as string[];
 
-  // Build a map of content-file-path → live URL path from contentTypes JSON
   type ContentType = { path: string; url?: string };
   let contentTypeMap: ContentType[] = [];
   if (site.contentTypes) {
@@ -85,16 +81,13 @@ export default async function SitePage({
     if (q && !a.title.toLowerCase().includes(q) && !a.keyword.toLowerCase().includes(q)) return false;
     return true;
   }).sort((a, b) => {
-    // Scheduled/published: sort by scheduledAt ascending (nearest first)
     if (filterStatus === "scheduled") {
       return new Date(a.scheduledAt!).getTime() - new Date(b.scheduledAt!).getTime();
     }
-    // Published (live): most recently published first (scheduledAt = frontmatter date, most reliable)
     if (filterStatus === "published") {
       return new Date(b.scheduledAt ?? b.publishedAt ?? b.createdAt).getTime() -
              new Date(a.scheduledAt ?? a.publishedAt ?? a.createdAt).getTime();
     }
-    // Default: newest first
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
@@ -102,7 +95,7 @@ export default async function SitePage({
     <div className="p-8">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white mb-6 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-[#64748B] hover:text-[#0F172A] mb-6 transition-colors"
       >
         <ArrowLeft size={14} /> Dashboard
       </Link>
@@ -118,12 +111,12 @@ export default async function SitePage({
             />
           )}
           <div>
-            <h1 className="text-xl font-semibold text-white">{site.name}</h1>
+            <h1 className="text-xl font-semibold text-[#0F172A]">{site.name}</h1>
             <a
               href={`https://${site.domain}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-white/30 hover:text-white/60 mt-0.5 transition-colors"
+              className="inline-flex items-center gap-1 text-xs text-[#94A3B8] hover:text-[#64748B] mt-0.5 transition-colors"
             >
               {site.domain} <ExternalLink size={10} />
             </a>
@@ -132,13 +125,13 @@ export default async function SitePage({
         <div className="flex items-center gap-4">
           <Link
             href={`/sites/${slug}/docs`}
-            className="inline-flex items-center gap-1.5 text-xs text-white/30 hover:text-white/60 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-[#475569] transition-colors"
           >
             <FileText size={13} /> Docs
           </Link>
           <Link
             href={`/sites/${slug}/authors`}
-            className="inline-flex items-center gap-1.5 text-xs text-white/30 hover:text-white/60 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-[#475569] transition-colors"
           >
             <Users size={13} />
             {site.authors.length > 0 ? `${site.authors.length} authors` : "Authors"}
@@ -146,7 +139,7 @@ export default async function SitePage({
           <SyncButton siteSlug={slug} />
           <Link
             href={`/sites/${slug}/settings`}
-            className="text-xs text-white/30 hover:text-white/60 transition-colors"
+            className="text-xs text-[#94A3B8] hover:text-[#475569] transition-colors"
           >
             Settings
           </Link>
@@ -167,8 +160,8 @@ export default async function SitePage({
       {/* Articles list */}
       <div className="mt-6">
         {filtered.length === 0 ? (
-          <div className="border border-dashed border-white/10 rounded-lg p-10 text-center">
-            <p className="text-sm text-white/30">
+          <div className="border border-dashed border-[#E2E8F0] rounded-xl p-10 text-center">
+            <p className="text-sm text-[#94A3B8]">
               {site.articles.length === 0
                 ? "No articles yet. Add one above or sync from the repo."
                 : "No articles match the current filters."}

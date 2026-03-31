@@ -78,13 +78,13 @@ export default function NewSitePage() {
     <div className="p-8 max-w-2xl">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white mb-6 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-[#64748B] hover:text-[#0F172A] mb-6 transition-colors"
       >
         <ArrowLeft size={14} /> Back
       </Link>
 
-      <h1 className="text-xl font-semibold text-white mb-1">Add New Site</h1>
-      <p className="text-sm text-white/30 mb-6">Choose how content will be published</p>
+      <h1 className="text-xl font-semibold text-[#0F172A] mb-1">Add New Site</h1>
+      <p className="text-sm text-[#64748B] mb-6">Choose how content will be published</p>
 
       {/* Destination picker */}
       <div className="grid grid-cols-4 gap-3 mb-8">
@@ -98,28 +98,28 @@ export default function NewSitePage() {
               "relative flex flex-col items-start gap-2 p-4 rounded-xl border text-left transition-all",
               d.available
                 ? destination === d.id
-                  ? "bg-white/10 border-white/25 text-white"
-                  : "bg-[#161616] border-white/[0.06] text-white/50 hover:border-white/20 hover:text-white/80"
-                : "bg-[#111] border-white/[0.04] text-white/20 cursor-not-allowed"
+                  ? "bg-[#2A2944] border-[#2A2944] text-white shadow-sm"
+                  : "bg-white border-[#E2E8F0] text-[#64748B] hover:border-[#CBD5E1] hover:text-[#0F172A] shadow-sm"
+                : "bg-[#F8FAFC] border-[#E2E8F0] text-[#CBD5E1] cursor-not-allowed"
             )}
           >
             {!d.available && (
               <span className="absolute top-2.5 right-2.5">
-                <Lock size={10} className="text-white/20" />
+                <Lock size={10} className="text-[#CBD5E1]" />
               </span>
             )}
             {destination === d.id && d.available && (
               <span className="absolute top-2.5 right-2.5">
-                <Check size={11} className="text-white/60" />
+                <Check size={11} className="text-white/80" />
               </span>
             )}
-            <span className={cn(destination === d.id && d.available ? "text-white" : "")}>{d.icon}</span>
+            <span>{d.icon}</span>
             <div>
               <p className="text-xs font-medium leading-none mb-1">{d.label}</p>
-              <p className="text-[11px] text-white/30 leading-snug">{d.description}</p>
+              <p className={cn("text-[11px] leading-snug", destination === d.id && d.available ? "text-white/60" : "text-[#94A3B8]")}>{d.description}</p>
             </div>
             {!d.available && (
-              <span className="text-[10px] text-white/20 font-medium">Coming soon</span>
+              <span className="text-[10px] text-[#CBD5E1] font-medium">Coming soon</span>
             )}
           </button>
         ))}
@@ -133,13 +133,13 @@ export default function NewSitePage() {
         </div>
         <Field label="Domain" name="domain" placeholder="furra.co.uk" required />
 
-        <hr className="border-white/[0.06]" />
+        <hr className="border-[#E2E8F0]" />
 
         {/* GitHub-specific fields */}
         {destination === "github" && (
           <>
             <div>
-              <p className="text-xs font-medium text-white/50 mb-3 flex items-center gap-1.5">
+              <p className="text-xs font-medium text-[#64748B] mb-3 flex items-center gap-1.5">
                 <GitBranch size={12} /> GitHub settings
               </p>
               <div className="space-y-4">
@@ -156,13 +156,13 @@ export default function NewSitePage() {
                 <Field label="Assets Path" name="assetsPath" placeholder="public/images/blog" />
               </div>
             </div>
-            <hr className="border-white/[0.06]" />
+            <hr className="border-[#E2E8F0]" />
           </>
         )}
 
         {/* Writing / AI */}
         <div>
-          <p className="text-xs font-medium text-white/50 mb-3">Writing & AI</p>
+          <p className="text-xs font-medium text-[#64748B] mb-3">Writing & AI</p>
           <div className="space-y-4">
             <TextareaField
               label="Brand Voice"
@@ -178,7 +178,7 @@ export default function NewSitePage() {
         </div>
 
         {error && (
-          <p className="text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded">
+          <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg">
             {error}
           </p>
         )}
@@ -186,7 +186,7 @@ export default function NewSitePage() {
         <button
           type="submit"
           disabled={loading}
-          className="px-4 py-2 bg-white text-black text-sm font-medium rounded-md hover:bg-white/90 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] disabled:opacity-50 transition-colors"
         >
           {loading ? "Creating..." : "Create Site"}
         </button>
@@ -208,12 +208,12 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs text-white/50 mb-1.5">{label}</label>
+      <label className="block text-xs text-[#64748B] mb-1.5 font-medium">{label}</label>
       <input
         name={name}
         placeholder={placeholder}
         required={required}
-        className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
+        className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
       />
     </div>
   );
@@ -232,12 +232,12 @@ function TextareaField({
 }) {
   return (
     <div>
-      <label className="block text-xs text-white/50 mb-1.5">{label}</label>
+      <label className="block text-xs text-[#64748B] mb-1.5 font-medium">{label}</label>
       <textarea
         name={name}
         placeholder={placeholder}
         rows={rows}
-        className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded-md px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors resize-none"
+        className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors resize-none"
       />
     </div>
   );

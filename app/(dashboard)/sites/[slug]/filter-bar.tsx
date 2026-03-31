@@ -19,7 +19,6 @@ export function FilterBar({
   const [, startTransition] = useTransition();
 
   const activeAuthor = searchParams.get("author");
-  // Multi-select categories stored as comma-separated
   const activeCategories = searchParams.get("category")?.split(",").filter(Boolean) ?? [];
   const activeSearch = searchParams.get("q") ?? "";
 
@@ -71,17 +70,17 @@ export function FilterBar({
       <div className="flex items-center gap-3 flex-wrap">
         {/* Search */}
         <div className="relative">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none" />
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] pointer-events-none" />
           <input
             value={searchInput}
             onChange={(e) => handleSearch(e.target.value)}
             placeholder="Search..."
-            className="bg-[#161616] border border-white/[0.08] rounded-lg pl-8 pr-7 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/20 w-44"
+            className="bg-white border border-[#E2E8F0] rounded-lg pl-8 pr-7 py-1.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] w-44 transition-colors"
           />
           {searchInput && (
             <button
               onClick={() => handleSearch("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/60"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569]"
             >
               <X size={12} />
             </button>
@@ -93,8 +92,7 @@ export function FilterBar({
           <select
             value={activeAuthor ?? ""}
             onChange={(e) => setParam("author", e.target.value || null)}
-            className="bg-[#161616] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/20 appearance-none cursor-pointer"
-            style={{ colorScheme: "dark" }}
+            className="bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] appearance-none cursor-pointer transition-colors"
           >
             <option value="">All authors</option>
             {authors.map((a) => (
@@ -121,8 +119,7 @@ export function FilterBar({
                 }
                 startTransition(() => router.push(`${pathname}?${params.toString()}`));
               }}
-              className="bg-[#161616] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/20 cursor-pointer"
-              style={{ colorScheme: "dark" }}
+              className="bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] cursor-pointer transition-colors"
               size={1}
             >
               {categories.map((cat) => (
@@ -132,7 +129,7 @@ export function FilterBar({
               ))}
             </select>
             {activeCategories.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-white text-black text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+              <span className="absolute -top-1.5 -right-1.5 bg-[#A7C838] text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center leading-none">
                 {activeCategories.length}
               </span>
             )}
@@ -142,13 +139,12 @@ export function FilterBar({
         {hasFilters && (
           <button
             onClick={() => router.push(pathname)}
-            className="text-xs text-white/20 hover:text-white/50 transition-colors"
+            className="text-xs text-[#94A3B8] hover:text-[#475569] transition-colors"
           >
             Clear
           </button>
         )}
       </div>
-
     </div>
   );
 }

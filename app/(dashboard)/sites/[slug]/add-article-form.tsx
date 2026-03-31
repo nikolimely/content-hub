@@ -24,7 +24,6 @@ export function AddArticleForm({
     setLoading(true);
     const fd = new FormData(e.currentTarget);
     const body = Object.fromEntries(fd.entries());
-    // Remove empty optional fields
     if (!body.scheduledAt) delete body.scheduledAt;
     if (!body.authorId) delete body.authorId;
 
@@ -46,7 +45,7 @@ export function AddArticleForm({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors"
+        className="flex items-center gap-2 text-sm text-[#64748B] hover:text-[#0F172A] transition-colors"
       >
         <Plus size={14} /> Add article
       </button>
@@ -56,43 +55,43 @@ export function AddArticleForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#161616] border border-white/[0.08] rounded-lg p-4 space-y-3"
+      className="bg-white border border-[#E2E8F0] rounded-xl p-4 space-y-3 shadow-sm"
     >
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-white/40 mb-1">Title</label>
+          <label className="block text-xs text-[#64748B] mb-1 font-medium">Title</label>
           <input
             name="title"
             required
             placeholder="Best dog food for puppies"
-            className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
+            className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
           />
         </div>
         <div>
-          <label className="block text-xs text-white/40 mb-1">Focus Keyword</label>
+          <label className="block text-xs text-[#64748B] mb-1 font-medium">Focus Keyword</label>
           <input
             name="keyword"
             required
             placeholder="dog food for puppies"
-            className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
+            className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
           />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-white/40 mb-1">Scheduled Date (optional)</label>
+          <label className="block text-xs text-[#64748B] mb-1 font-medium">Scheduled Date (optional)</label>
           <input
             type="date"
             name="scheduledAt"
-            className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/30"
+            className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
           />
         </div>
         {authors.length > 0 && (
           <div>
-            <label className="block text-xs text-white/40 mb-1">Author (optional)</label>
+            <label className="block text-xs text-[#64748B] mb-1 font-medium">Author (optional)</label>
             <select
               name="authorId"
-              className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/30"
+              className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
             >
               <option value="">— unassigned —</option>
               {authors.map((a) => (
@@ -108,14 +107,14 @@ export function AddArticleForm({
         <button
           type="submit"
           disabled={loading}
-          className="px-3 py-1.5 bg-white text-black text-sm font-medium rounded hover:bg-white/90 disabled:opacity-50 transition-colors"
+          className="px-3 py-1.5 bg-[#2A2944] text-white text-sm font-medium rounded-lg hover:bg-[#1e1e38] disabled:opacity-50 transition-colors"
         >
           {loading ? "Adding..." : "Add"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="px-3 py-1.5 text-sm text-white/40 hover:text-white transition-colors"
+          className="px-3 py-1.5 text-sm text-[#64748B] hover:text-[#0F172A] transition-colors"
         >
           Cancel
         </button>

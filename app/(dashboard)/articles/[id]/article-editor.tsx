@@ -34,10 +34,10 @@ type Article = {
 };
 
 const statusColour: Record<string, string> = {
-  planned: "bg-white/10 text-white/50",
-  generating: "bg-blue-500/20 text-blue-400",
-  draft: "bg-yellow-500/20 text-yellow-400",
-  published: "bg-purple-500/20 text-purple-400",
+  planned: "bg-slate-100 text-slate-500",
+  generating: "bg-blue-50 text-blue-600",
+  draft: "bg-amber-50 text-amber-600",
+  published: "bg-purple-50 text-purple-600",
 };
 
 function stripFrontmatter(raw: string): string {
@@ -261,7 +261,7 @@ export function ArticleEditor({ article }: { article: Article }) {
       onClick={() => togglePanel(p)}
       className={cn(
         "flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs transition-colors",
-        panel === p ? "bg-white/15 text-white" : "text-white/30 hover:text-white hover:bg-white/10"
+        panel === p ? "bg-[#F1F5F9] text-[#0F172A]" : "text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
       )}
     >
       {icon} {label}
@@ -269,7 +269,7 @@ export function ArticleEditor({ article }: { article: Article }) {
   );
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-white">
       {showFeaturedPicker && (
         <ImagePicker
           articleId={article.id}
@@ -284,21 +284,21 @@ export function ArticleEditor({ article }: { article: Article }) {
         />
       )}
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-white/[0.06] bg-[#0f0f0f] shrink-0">
+      <header className="flex items-center justify-between px-6 py-3 border-b border-[#E2E8F0] bg-white shrink-0 sticky top-0 z-10">
         {/* Left */}
         <div className="flex items-center gap-3 min-w-0">
-          <Link href={`/sites/${article.site.slug}`} className="text-white/40 hover:text-white transition-colors shrink-0">
+          <Link href={`/sites/${article.site.slug}`} className="text-[#94A3B8] hover:text-[#0F172A] transition-colors shrink-0">
             <ArrowLeft size={16} />
           </Link>
           <div className="min-w-0">
-            <h1 className="text-sm font-medium text-white leading-tight truncate">{article.title}</h1>
-            <p className="text-xs text-white/30">{article.site.name} · {article.keyword}</p>
+            <h1 className="text-sm font-medium text-[#0F172A] leading-tight truncate">{article.title}</h1>
+            <p className="text-xs text-[#94A3B8]">{article.site.name} · {article.keyword}</p>
           </div>
         </div>
 
         {/* Right */}
         <div className="flex items-center gap-1 shrink-0 ml-4">
-          <span className={cn("text-xs px-2 py-0.5 rounded-full mr-2", statusColour[status] || "bg-white/10 text-white/40")}>
+          <span className={cn("text-xs px-2 py-0.5 rounded-full mr-2", statusColour[status] || "bg-slate-100 text-slate-500")}>
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </span>
 
@@ -309,7 +309,7 @@ export function ArticleEditor({ article }: { article: Article }) {
               {panelBtn("schedule", <Calendar size={13} />, "Publish")}
               <button
                 onClick={() => setShowFeaturedPicker(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs transition-colors text-white/30 hover:text-white hover:bg-white/10"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs transition-colors text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
               >
                 <ImageIcon size={13} /> {heroImage ? "Featured image" : "Add image"}
               </button>
@@ -317,7 +317,7 @@ export function ArticleEditor({ article }: { article: Article }) {
                 onClick={() => { setAiEditOpen((v) => !v); setPanel(null); setRawMode(false); }}
                 className={cn(
                   "flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs transition-colors",
-                  aiEditOpen || aiEditing ? "bg-purple-500/20 text-purple-400" : "text-white/30 hover:text-white hover:bg-white/10"
+                  aiEditOpen || aiEditing ? "bg-purple-100 text-purple-600" : "text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
                 )}
               >
                 {aiEditing ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} />}
@@ -325,43 +325,41 @@ export function ArticleEditor({ article }: { article: Article }) {
               </button>
               {previewUrl && (
                 <a href={previewUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs text-white/30 hover:text-white hover:bg-white/10 transition-colors">
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors">
                   <ExternalLink size={13} /> Preview
                 </a>
               )}
               {liveUrl && (
                 <a href={liveUrl} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs text-white/30 hover:text-white hover:bg-white/10 transition-colors">
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors">
                   <ExternalLink size={13} /> Live
                 </a>
               )}
               <button onClick={toggleRaw} title="Raw MDX"
                 className={cn("p-1.5 rounded transition-colors ml-0.5",
-                  rawMode ? "bg-white/15 text-white" : "text-white/30 hover:text-white hover:bg-white/10")}>
+                  rawMode ? "bg-[#F1F5F9] text-[#0F172A]" : "text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9]")}>
                 <Code2 size={14} />
               </button>
-              <span className="w-px h-4 bg-white/10 mx-1" />
+              <span className="w-px h-4 bg-[#E2E8F0] mx-1" />
             </>
           )}
 
           {/* Action buttons */}
           {status === "planned" && (
             <button onClick={startGeneration} disabled={generating}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded transition-colors disabled:opacity-50">
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50">
               <Zap size={12} /> Generate
             </button>
           )}
           {(status === "draft" || status === "generating") && (
-            <>
-              <button onClick={handleSave} disabled={saving}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs rounded transition-colors">
-                {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />} Save
-              </button>
-            </>
+            <button onClick={handleSave} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] text-xs rounded-lg transition-colors border border-[#E2E8F0]">
+              {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />} Save
+            </button>
           )}
           {status === "draft" && (
             <button onClick={handlePublish} disabled={publishing}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-black text-xs font-medium rounded hover:bg-white/90 disabled:opacity-50 transition-colors">
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2A2944] text-white text-xs font-medium rounded-lg hover:bg-[#1e1e38] disabled:opacity-50 transition-colors">
               {publishing ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
               {publishing ? "Publishing..." : "Publish to GitHub"}
             </button>
@@ -378,18 +376,18 @@ export function ArticleEditor({ article }: { article: Article }) {
               setPublishing(false);
               router.refresh();
             }} disabled={publishing}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-black text-xs font-medium rounded hover:bg-white/90 disabled:opacity-50 transition-colors">
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2A2944] text-white text-xs font-medium rounded-lg hover:bg-[#1e1e38] disabled:opacity-50 transition-colors">
               {publishing ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
               {publishing ? "Updating..." : "Update on GitHub"}
             </button>
           )}
         </div>
-      </div>
+      </header>
 
       {/* AI Edit bar */}
       {aiEditOpen && (
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-white/[0.06] bg-purple-500/5 shrink-0">
-          <Wand2 size={13} className="text-purple-400 shrink-0" />
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-[#E2E8F0] bg-purple-50 shrink-0">
+          <Wand2 size={13} className="text-purple-500 shrink-0" />
           <input
             autoFocus
             value={aiInstruction}
@@ -399,16 +397,16 @@ export function ArticleEditor({ article }: { article: Article }) {
               if (e.key === "Escape") { setAiEditOpen(false); setAiInstruction(""); }
             }}
             placeholder="Describe your edit... e.g. 'Make the tone more conversational' or 'Add a FAQ section at the end'"
-            className="flex-1 bg-transparent text-sm text-white placeholder-white/25 focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none"
           />
           <button
             onClick={handleAiEdit}
             disabled={!aiInstruction.trim()}
-            className="flex items-center gap-1 px-2.5 py-1 bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white text-xs rounded transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1 bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white text-xs rounded-lg transition-colors"
           >
             <ArrowRight size={12} /> Edit
           </button>
-          <button onClick={() => { setAiEditOpen(false); setAiInstruction(""); }} className="text-white/30 hover:text-white transition-colors">
+          <button onClick={() => { setAiEditOpen(false); setAiInstruction(""); }} className="text-[#94A3B8] hover:text-[#475569] transition-colors">
             <X size={14} />
           </button>
         </div>
@@ -417,24 +415,24 @@ export function ArticleEditor({ article }: { article: Article }) {
       {/* Body */}
       <div className="flex-1 flex overflow-hidden">
         {/* Editor */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden bg-[#F8FAFC]">
           {rawMode ? (
             <textarea value={content} onChange={(e) => setContent(e.target.value)}
-              className="w-full h-full p-6 bg-transparent text-sm text-white/80 font-mono leading-relaxed resize-none focus:outline-none" />
+              className="w-full h-full p-6 bg-white text-sm text-[#0F172A] font-mono leading-relaxed resize-none focus:outline-none" />
           ) : generating ? (
             <div className="h-full overflow-y-auto">
               <article className="max-w-2xl mx-auto px-8 py-10">
                 {heroImageSrc && <div className="mb-8 rounded-lg overflow-hidden aspect-video"><img src={heroImageSrc} alt={article.title} className="w-full h-full object-cover" /></div>}
-                <h1 className="text-2xl font-bold text-white mb-2">{article.title}</h1>
-                {metaDescription && <p className="text-sm text-white/40 mb-8">{metaDescription}</p>}
-                <pre className="text-sm text-white/70 font-mono whitespace-pre-wrap leading-relaxed">{body}</pre>
+                <h1 className="text-2xl font-bold text-[#0F172A] mb-2">{article.title}</h1>
+                {metaDescription && <p className="text-sm text-[#94A3B8] mb-8">{metaDescription}</p>}
+                <pre className="text-sm text-[#475569] font-mono whitespace-pre-wrap leading-relaxed">{body}</pre>
               </article>
             </div>
           ) : content ? (
             <div className="h-full overflow-y-auto">
               <div className="max-w-2xl mx-auto px-8 pt-8">
                 {heroImage ? (
-                  <div className="relative group rounded-lg overflow-hidden aspect-video mb-2 bg-white/[0.03]">
+                  <div className="relative group rounded-lg overflow-hidden aspect-video mb-2 bg-[#F1F5F9]">
                     <button
                       onClick={(e) => { e.stopPropagation(); handleRemoveFeaturedImage(); }}
                       className="absolute top-2 right-2 z-10 p-1 bg-black/60 hover:bg-red-500/80 text-white rounded-md transition-colors opacity-0 group-hover:opacity-100"
@@ -450,14 +448,14 @@ export function ArticleEditor({ article }: { article: Article }) {
                         {uploadingFeatured ? <Loader2 size={12} className="animate-spin" /> : <ImageIcon size={12} />}
                         {uploadingFeatured ? "Uploading..." : "Change image"}
                       </span>
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-white/40 font-mono truncate max-w-xs">{heroImage}</span>
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-white/60 font-mono truncate max-w-xs">{heroImage}</span>
                     </div>
                   </div>
                   </div>
                 ) : (
                   <button
                     onClick={() => setShowFeaturedPicker(true)}
-                    className="w-full aspect-video rounded-lg border border-dashed border-white/10 hover:border-white/20 flex items-center justify-center gap-2 text-white/20 hover:text-white/40 transition-colors mb-2"
+                    className="w-full aspect-video rounded-lg border border-dashed border-[#E2E8F0] hover:border-[#CBD5E1] flex items-center justify-center gap-2 text-[#CBD5E1] hover:text-[#94A3B8] transition-colors mb-2"
                   >
                     {uploadingFeatured ? <Loader2 size={14} className="animate-spin" /> : <ImageIcon size={14} />}
                     <span className="text-xs">{uploadingFeatured ? "Uploading..." : "Add featured image"}</span>
@@ -471,9 +469,9 @@ export function ArticleEditor({ article }: { article: Article }) {
           ) : (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
-                <p className="text-sm text-white/30 mb-4">No content yet.</p>
+                <p className="text-sm text-[#94A3B8] mb-4">No content yet.</p>
                 <button onClick={startGeneration}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded transition-colors mx-auto">
+                  className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors mx-auto">
                   <Zap size={14} /> Generate with {MODELS.find(m => m.value === article.site.model)?.label.split(" ")[0] ?? "AI"}
                 </button>
               </div>
@@ -483,7 +481,7 @@ export function ArticleEditor({ article }: { article: Article }) {
 
         {/* Side panel */}
         {panel && (
-          <div className="w-[430px] shrink-0 border-l border-white/[0.06] overflow-y-auto bg-[#0f0f0f]">
+          <div className="w-[430px] shrink-0 border-l border-[#E2E8F0] overflow-y-auto bg-white">
             {panel === "seo" && (
               <SeoPanel article={article} content={content} onContentChange={setContent} />
             )}
@@ -495,8 +493,8 @@ export function ArticleEditor({ article }: { article: Article }) {
       </div>
 
       {generating && (
-        <div className="shrink-0 px-6 py-2 border-t border-white/[0.06] bg-blue-500/5">
-          <p className="text-xs text-blue-400 flex items-center gap-1.5">
+        <div className="shrink-0 px-6 py-2 border-t border-[#E2E8F0] bg-blue-50">
+          <p className="text-xs text-blue-600 flex items-center gap-1.5">
             <Loader2 size={11} className="animate-spin" /> Generating with {MODELS.find(m => m.value === article.site.model)?.label.split(" ")[0] ?? "AI"}...
           </p>
         </div>
