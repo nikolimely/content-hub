@@ -289,7 +289,7 @@ ${output}
   // 7. Commit markdown to the site's GitHub repo
   if (site.githubRepo && process.env.GITHUB_TOKEN) {
     const branch = site.repoBranch || "main";
-    const repoPath = `content-plans/${filename}`;
+    const repoPath = `cms/content-plans/${filename}`;
     const apiUrl = `https://api.github.com/repos/${site.githubRepo}/contents/${repoPath}`;
     const encoded = Buffer.from(markdown).toString("base64");
 
