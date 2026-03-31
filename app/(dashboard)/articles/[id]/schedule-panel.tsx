@@ -46,13 +46,27 @@ export function SchedulePanel({
     return "";
   }
 
-  const [scheduledAt, setScheduledAt] = useState(getInitialDate);
+  function getInitialTime() {
+    if (article.scheduledAt) {
+      const d = new Date(article.scheduledAt);
+      return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    }
+    return "09:00";
+  }
+
+  const [scheduledDate, setScheduledDate] = useState(getInitialDate);
+  const [scheduledTime, setScheduledTime] = useState(getInitialTime);
   const [authorId, setAuthorId] = useState(article.authorId ?? "");
 
   function getInitialStatus() {
     const date = getInitialDate();
     if (article.status === "published" && date && new Date(date) > new Date()) return "scheduled";
     return article.status;
+  }
+
+  function buildDateTime(date: string, time: string) {
+    if (!date) return null;
+    return new Date(`${date}T${time || "09:00"}:00`).toISOString();
   }
 
   const [status, setStatus] = useState(getInitialStatus);
@@ -65,7 +79,7 @@ export function SchedulePanel({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        scheduledAt: scheduledAt ? new Date(scheduledAt).toISOString() : null,
+        scheduledAt: buildDateTime(scheduledDate, scheduledTime),
         authorId: authorId || null,
         status,
       }),
@@ -103,24 +117,34 @@ export function SchedulePanel({
           </div>
         </div>
 
-        {/* Scheduled date */}
+        {/* Scheduled date + time */}
         <div>
-          <label className="block text-xs text-[#64748B] mb-1.5">Scheduled Date</label>
-          <input
-            type="date"
-            value={scheduledAt}
-            onChange={(e) => {
-            const val = e.target.value;
-            setScheduledAt(val);
-            if (val && new Date(val) > new Date()) {
-              setStatus("scheduled");
-            }
-          }}
-            className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
-          />
-          {scheduledAt && (
+          <label className="block text-xs text-[#64748B] mb-1.5">Scheduled Date &amp; Time</label>
+          <div className="flex gap-2">
+            <input
+              type="date"
+              value={scheduledDate}
+              onChange={(e) => {
+                const val = e.target.value;
+                setScheduledDate(val);
+                if (val && new Date(`${val}T${scheduledTime}:00`) > new Date()) {
+                  setStatus("scheduled");
+                }
+              }}
+              className="flex-1 bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
+            />
+            <input
+              type="time"
+              value={scheduledTime}
+              onChange={(e) => setScheduledTime(e.target.value)}
+              className="w-28 bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
+            />
+          </div>
+          {scheduledDate && (
             <p className="text-xs text-[#94A3B8] mt-1">
-              {new Date(scheduledAt).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              {new Date(`${scheduledDate}T${scheduledTime}:00`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              {" at "}
+              {scheduledTime}
             </p>
           )}
         </div>
