@@ -287,7 +287,9 @@ ${output}
   console.log(`✅ Added ${added} planned articles to Content Hub${skipped ? ` (${skipped} skipped — already exist)` : ""}.`);
 
   // 7. Commit markdown to the site's GitHub repo
-  if (site.githubRepo && process.env.GITHUB_TOKEN) {
+  const org = site.githubRepo.split("/")[0];
+  const githubToken = process.env[`${org.toUpperCase()}_GITHUB_TOKEN`] ?? process.env.GITHUB_TOKEN;
+  if (site.githubRepo && githubToken) {
     const branch = site.repoBranch || "main";
     const repoPath = `cms/content-plans/${filename}`;
     const apiUrl = `https://api.github.com/repos/${site.githubRepo}/contents/${repoPath}`;
@@ -296,7 +298,7 @@ ${output}
     // Check if file already exists (need its SHA to update)
     let sha;
     const existing = await fetch(apiUrl, {
-      headers: { Authorization: `token ${process.env.GITHUB_TOKEN}`, Accept: "application/vnd.github+json" },
+      headers: { Authorization: `token ${githubToken}`, Accept: "application/vnd.github+json" },
     });
     if (existing.ok) {
       const data = await existing.json();
@@ -306,7 +308,7 @@ ${output}
     const res = await fetch(apiUrl, {
       method: "PUT",
       headers: {
-        Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        Authorization: `token ${githubToken}`,
         Accept: "application/vnd.github+json",
         "Content-Type": "application/json",
       },
