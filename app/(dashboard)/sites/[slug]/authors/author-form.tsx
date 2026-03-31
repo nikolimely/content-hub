@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 
@@ -19,6 +19,14 @@ export function AuthorForm({
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(author?.avatar ?? "");
+  const bioRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (bioRef.current) {
+      bioRef.current.style.height = "auto";
+      bioRef.current.style.height = `${bioRef.current.scrollHeight}px`;
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -88,11 +96,17 @@ export function AuthorForm({
       <div>
         <label className="block text-xs text-[#64748B] mb-1.5 font-medium">Bio</label>
         <textarea
+          ref={bioRef}
           name="bio"
           defaultValue={author?.bio ?? ""}
-          rows={5}
+          rows={3}
           placeholder="Short author bio..."
-          className={`${inputCls} resize-none`}
+          className={`${inputCls} resize-none overflow-hidden`}
+          onInput={(e) => {
+            const el = e.currentTarget;
+            el.style.height = "auto";
+            el.style.height = `${el.scrollHeight}px`;
+          }}
         />
       </div>
 
