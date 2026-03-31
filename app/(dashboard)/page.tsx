@@ -2,14 +2,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { Globe, FileText, Clock, CheckCircle, Plus } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-
-const statusColour: Record<string, string> = {
-  planned: "bg-slate-100 text-slate-500",
-  generating: "bg-blue-50 text-blue-600",
-  draft: "bg-amber-50 text-amber-600",
-  ready: "bg-green-50 text-green-600",
-  published: "bg-purple-50 text-purple-600",
-};
+import { SiteCard } from "./sites/site-card";
 
 export default async function DashboardPage() {
   const sites = await db.site.findMany({
@@ -86,49 +79,9 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-4">
-          {sites.map((site) => {
-            const byStatus = site.articles.reduce(
-              (acc, a) => {
-                acc[a.status] = (acc[a.status] || 0) + 1;
-                return acc;
-              },
-              {} as Record<string, number>
-            );
-
-            return (
-              <Link
-                key={site.id}
-                href={`/sites/${site.slug}`}
-                className="bg-white border border-[#E2E8F0] rounded-xl p-5 hover:shadow-md hover:border-[#CBD5E1] transition-all group shadow-sm"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h2 className="font-medium text-[#0F172A]">
-                      {site.name}
-                    </h2>
-                    <span className="text-xs text-[#94A3B8]">{site.domain}</span>
-                  </div>
-                  <span className="text-xs bg-[#F1F5F9] px-2 py-0.5 rounded text-[#64748B]">
-                    {site.articles.length} articles
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {(Object.entries(byStatus) as [string, number][]).map(([status, count]) => (
-                    <span
-                      key={status}
-                      className={`text-xs px-2 py-0.5 rounded-full ${statusColour[status] || "bg-slate-100 text-slate-500"}`}
-                    >
-                      {count} {status.charAt(0).toUpperCase() + status.slice(1)}
-                    </span>
-                  ))}
-                  {site.articles.length === 0 && (
-                    <span className="text-xs text-[#94A3B8]">No articles yet</span>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
+          {sites.map((site) => (
+            <SiteCard key={site.id} site={site} />
+          ))}
         </div>
       )}
     </div>
