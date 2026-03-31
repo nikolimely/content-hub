@@ -102,14 +102,14 @@ export default async function SitePage({
 
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-3">
-          {site.logo && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={site.logo}
-              alt={site.name}
-              className="h-12 w-auto max-w-[160px] rounded-lg object-contain shrink-0"
-            />
-          )}
+          <div className="h-10 w-10 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-center shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {site.faviconUrl ? (
+              <img src={site.faviconUrl} alt={site.name} className="h-5 w-5 object-contain" />
+            ) : (
+              <span className="text-sm font-semibold text-[#94A3B8]">{site.name[0]}</span>
+            )}
+          </div>
           <div>
             <h1 className="text-xl font-semibold text-[#0F172A]">{site.name}</h1>
             <a
