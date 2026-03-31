@@ -18,11 +18,11 @@ type Article = {
 const statusOptions = ["planned", "draft", "scheduled", "published"] as const;
 
 const statusColour: Record<string, string> = {
-  planned: "bg-white/10 text-white/50",
-  draft: "bg-yellow-500/20 text-yellow-400",
-  ready: "bg-green-500/20 text-green-400",
-  scheduled: "bg-blue-500/20 text-blue-400",
-  published: "bg-purple-500/20 text-purple-400",
+  planned: "bg-slate-100 text-slate-600",
+  draft: "bg-amber-50 text-amber-600",
+  ready: "bg-green-50 text-green-600",
+  scheduled: "bg-sky-50 text-sky-600",
+  published: "bg-purple-50 text-purple-600",
 };
 
 export function SchedulePanel({
@@ -79,12 +79,12 @@ export function SchedulePanel({
 
   return (
     <div className="p-5 space-y-5">
-      <h2 className="text-xs font-semibold text-white/40 uppercase tracking-wider">Publish</h2>
+      <h2 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider">Publish</h2>
 
       <div className="space-y-5">
         {/* Status */}
         <div>
-          <label className="block text-xs text-white/40 mb-2">Status</label>
+          <label className="block text-xs text-[#64748B] mb-2">Status</label>
           <div className="flex flex-wrap gap-1.5">
             {statusOptions.map((s) => (
               <button
@@ -93,8 +93,8 @@ export function SchedulePanel({
                 className={cn(
                   "text-xs px-2.5 py-1 rounded-full border transition-all",
                   status === s
-                    ? `${statusColour[s]} border-white/20`
-                    : "bg-transparent text-white/30 border-white/[0.08] hover:border-white/20 hover:text-white/50"
+                    ? `${statusColour[s]} border-transparent`
+                    : "bg-transparent text-[#94A3B8] border-[#E2E8F0] hover:border-[#CBD5E1] hover:text-[#64748B]"
                 )}
               >
                 {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -105,7 +105,7 @@ export function SchedulePanel({
 
         {/* Scheduled date */}
         <div>
-          <label className="block text-xs text-white/40 mb-1.5">Scheduled Date</label>
+          <label className="block text-xs text-[#64748B] mb-1.5">Scheduled Date</label>
           <input
             type="date"
             value={scheduledAt}
@@ -116,11 +116,10 @@ export function SchedulePanel({
               setStatus("scheduled");
             }
           }}
-            className="w-full bg-[#161616] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/20"
-            style={{ colorScheme: "dark" }}
+            className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
           />
           {scheduledAt && (
-            <p className="text-xs text-white/25 mt-1">
+            <p className="text-xs text-[#94A3B8] mt-1">
               {new Date(scheduledAt).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
             </p>
           )}
@@ -129,12 +128,11 @@ export function SchedulePanel({
         {/* Author */}
         {authors.length > 0 && (
           <div>
-            <label className="block text-xs text-white/40 mb-1.5">Author</label>
+            <label className="block text-xs text-[#64748B] mb-1.5">Author</label>
             <select
               value={authorId}
               onChange={(e) => setAuthorId(e.target.value)}
-              className="w-full bg-[#161616] border border-white/[0.08] rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/20"
-              style={{ colorScheme: "dark" }}
+              className="w-full bg-white border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#A7C838]/40 focus:border-[#A7C838] transition-colors"
             >
               <option value="">— unassigned —</option>
               {authors.map((a) => (
@@ -147,7 +145,7 @@ export function SchedulePanel({
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs rounded transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2A2944] hover:bg-[#1e1e38] text-white text-xs rounded-lg transition-colors disabled:opacity-50"
         >
           {saving ? (
             <><Loader2 size={12} className="animate-spin" /> Saving...</>
