@@ -66,7 +66,7 @@ export function ArticleRow({
         )}
         {article.status === "planned" && article.scheduledAt && (
           <span className="text-xs text-[#94A3B8]">
-            {new Date(article.scheduledAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+            {new Date(article.scheduledAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
           </span>
         )}
         {article.status !== "planned" && (article.scheduledAt || article.publishedAt) && (

@@ -157,29 +157,132 @@ export default async function SitePage({
       {/* Add article */}
       <AddArticleForm siteId={site.id} siteSlug={slug} authors={site.authors} />
 
-      {/* Articles list */}
-      <div className="mt-6">
-        {filtered.length === 0 ? (
-          <div className="border border-dashed border-[#E2E8F0] rounded-xl p-10 text-center">
-            <p className="text-sm text-[#94A3B8]">
-              {site.articles.length === 0
-                ? "No articles yet. Add one above or sync from the repo."
-                : "No articles match the current filters."}
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-1">
-            {filtered.map((article) => (
-              <ArticleRow
-                key={article.id}
-                article={article}
-                siteSlug={slug}
-                liveUrl={article.status === "published" ? getLiveUrl(article.slug) : null}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Articles — dashboard view when no filters, list view when filtered */}
+      {filterStatus || filterCategory || filterAuthor || filterQ ? (
+        <div className="mt-6">
+          {filtered.length === 0 ? (
+            <div className="border border-dashed border-[#E2E8F0] rounded-xl p-10 text-center">
+              <p className="text-sm text-[#94A3B8]">No articles match the current filters.</p>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {filtered.map((article) => (
+                <ArticleRow
+                  key={article.id}
+                  article={article}
+                  siteSlug={slug}
+                  liveUrl={article.status === "published" ? getLiveUrl(article.slug) : null}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="mt-6 space-y-8">
+          {site.articles.length === 0 && (
+            <div className="border border-dashed border-[#E2E8F0] rounded-xl p-10 text-center">
+              <p className="text-sm text-[#94A3B8]">No articles yet. Add one above or sync from the repo.</p>
+            </div>
+          )}
+
+          {/* Recently published */}
+          {(() => {
+            const live = site.articles
+              .filter(isLive)
+              .sort((a, b) => new Date(b.scheduledAt ?? b.publishedAt ?? b.createdAt).getTime() - new Date(a.scheduledAt ?? a.publishedAt ?? a.createdAt).getTime())
+              .slice(0, 5);
+            if (!live.length) return null;
+            return (
+              <section>
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider">Recently Published</h2>
+                  <button onClick={undefined} className="hidden" />
+                  <Link href={`?status=published`} className="text-xs text-[#94A3B8] hover:text-[#475569] transition-colors">View all</Link>
+                </div>
+                <div className="space-y-1">
+                  {live.map((article) => (
+                    <ArticleRow key={article.id} article={article} siteSlug={slug} liveUrl={getLiveUrl(article.slug)} />
+                  ))}
+                </div>
+              </section>
+            );
+          })()}
+
+          {/* Scheduled / coming up */}
+          {(() => {
+            const upcoming = site.articles
+              .filter(isScheduled)
+              .sort((a, b) => new Date(a.scheduledAt!).getTime() - new Date(b.scheduledAt!).getTime());
+            if (!upcoming.length) return null;
+            return (
+              <section>
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider">Scheduled</h2>
+                  <Link href={`?status=scheduled`} className="text-xs text-[#94A3B8] hover:text-[#475569] transition-colors">View all</Link>
+                </div>
+                <div className="space-y-1">
+                  {upcoming.map((article) => (
+                    <ArticleRow key={article.id} article={article} siteSlug={slug} liveUrl={null} />
+                  ))}
+                </div>
+              </section>
+            );
+          })()}
+
+          {/* Drafts */}
+          {(() => {
+            const drafts = site.articles
+              .filter((a) => a.status === "draft")
+              .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+            if (!drafts.length) return null;
+            return (
+              <section>
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider">Drafts</h2>
+                  <Link href={`?status=draft`} className="text-xs text-[#94A3B8] hover:text-[#475569] transition-colors">View all</Link>
+                </div>
+                <div className="space-y-1">
+                  {drafts.slice(0, 5).map((article) => (
+                    <ArticleRow key={article.id} article={article} siteSlug={slug} liveUrl={null} />
+                  ))}
+                </div>
+              </section>
+            );
+          })()}
+
+          {/* Planned */}
+          {(() => {
+            const planned = site.articles
+              .filter((a) => a.status === "planned")
+              .sort((a, b) => {
+                if (a.scheduledAt && b.scheduledAt) return new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime();
+                if (a.scheduledAt) return -1;
+                if (b.scheduledAt) return 1;
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+              });
+            if (!planned.length) return null;
+            const showing = planned.slice(0, 10);
+            return (
+              <section>
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider">Planned <span className="font-normal normal-case">({planned.length})</span></h2>
+                  <Link href={`?status=planned`} className="text-xs text-[#94A3B8] hover:text-[#475569] transition-colors">View all</Link>
+                </div>
+                <div className="space-y-1">
+                  {showing.map((article) => (
+                    <ArticleRow key={article.id} article={article} siteSlug={slug} liveUrl={null} />
+                  ))}
+                </div>
+                {planned.length > 10 && (
+                  <Link href="?status=planned" className="mt-2 inline-block text-xs text-[#94A3B8] hover:text-[#475569] transition-colors">
+                    + {planned.length - 10} more planned
+                  </Link>
+                )}
+              </section>
+            );
+          })()}
+        </div>
+      )}
     </div>
   );
 }
