@@ -42,7 +42,7 @@ export async function GET(
     slug: article.slug,
     title: article.title,
     content,
-    author: article.author?.name?.split(" ")[0] ?? "Dynamically Team",
+    author: article.author?.name?.split(" ")[0] ?? `${article.site.name} Team`,
     site: {
       domain: article.site.domain,
       contentTypes: article.site.contentTypes,
