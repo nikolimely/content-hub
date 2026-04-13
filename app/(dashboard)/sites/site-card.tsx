@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import { SiteLogo } from "./site-logo";
-
 const statusColour: Record<string, string> = {
   planned: "bg-slate-100 text-slate-500",
   generating: "bg-blue-50 text-blue-600",
@@ -45,7 +43,12 @@ export function SiteCard({ site }: SiteCardProps) {
     >
       {/* Logo + domain */}
       <div className="flex items-center justify-between">
-        <SiteLogo logo={site.logo} name={site.name} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={site.logo || `/api/logo?domain=${encodeURIComponent(site.domain)}`}
+          alt={site.name}
+          className="h-[22px] w-auto object-contain"
+        />
         <a
           href={`https://${site.domain}`}
           target="_blank"
