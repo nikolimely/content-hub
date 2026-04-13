@@ -53,12 +53,13 @@ Repo: `git@github.com:nikolimely/content-hub.git`
 - Images are committed to `assetsPath` (e.g. `public/images/blog`)
 - After publish, `scheduledAt` is set from frontmatter `date` if future-dated
 
-### Preview Mode (Dynamically)
+### Preview Mode
 - Content Hub redirects to `https://{site.domain}/api/enable-draft?secret=...&slug=...&articleId=...`
-- Dynamically validates secret, enables Next.js draft mode, redirects to article
-- Article page fetches live content from Content Hub's `/api/preview/[articleId]` endpoint
+- Site validates secret, enables Next.js draft mode, redirects to `/draft/{articleId}`
+- Draft page fetches live content from Content Hub's `/api/preview/[articleId]` endpoint
 - `PREVIEW_SECRET` must match between both projects
-- `CONTENT_HUB_URL` env var on Dynamically points to Content Hub
+- `CONTENT_HUB_URL` env var on the target site points to Content Hub
+- Sites using Velite (e.g. Swyng) compile raw MDX at preview time via `@mdx-js/mdx`
 
 ### Sync from GitHub
 - `lib/sync.ts` — reads `cms/settings.md`, `cms/content-plan.md`, and content directories
@@ -73,7 +74,7 @@ ANTHROPIC_API_KEY   For Claude models
 OPENAI_API_KEY      For GPT models
 AUTH_SECRET         JWT signing secret (32+ chars)
 RESEND_API_KEY      Resend.com API key
-PREVIEW_SECRET      Shared with Dynamically for draft preview
+PREVIEW_SECRET      Shared with all target sites for draft preview
 CRON_SECRET         Vercel cron auth header secret
 ```
 
@@ -83,12 +84,22 @@ CRON_SECRET         Vercel cron auth header secret
 - `DATABASE_URL` in `.env` points to Neon for running migrations locally
 - SSH key for GitHub pushes: `~/.ssh/github`
 
-## Site: Dynamically
+## Sites
+
+### Dynamically
 - Repo: `Limely/dynamically`
 - Content path: `content/posts`
 - URL path: `/insights`
 - Authors file: `src/lib/authors.ts`
-- Deploy hook: set in Dynamically site settings in Content Hub
+- Deploy hook: set in site settings in Content Hub
+
+### Swyng
+- Repo: `Limely/swyng`
+- Content types: guides, occasions, tips, courses, locations (all under `content/`)
+- Authors file: `data/authors.json`
+- Uses Velite for static content — preview renders via `/draft/[articleId]` with `@mdx-js/mdx` compilation
+- `PREVIEW_SECRET` + `CONTENT_HUB_URL` env vars required on Vercel
+- Deploy hook: set in site settings in Content Hub
 
 ## Migrations
 When adding new fields:
