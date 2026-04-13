@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ExternalLink } from "lucide-react";
+
 const statusColour: Record<string, string> = {
   planned: "bg-slate-100 text-slate-500",
   generating: "bg-blue-50 text-blue-600",
@@ -23,6 +24,8 @@ type SiteCardProps = {
 };
 
 export function SiteCard({ site }: SiteCardProps) {
+  const router = useRouter();
+
   const byStatus = site.articles.reduce((acc, a) => {
     acc[a.status] = (acc[a.status] || 0) + 1;
     return acc;
@@ -37,9 +40,9 @@ export function SiteCard({ site }: SiteCardProps) {
     : null;
 
   return (
-    <Link
-      href={`/sites/${site.slug}`}
-      className="bg-white border border-[#E2E8F0] rounded-xl p-5 hover:shadow-md hover:border-[#CBD5E1] transition-all group flex flex-col gap-4 shadow-sm"
+    <div
+      onClick={() => router.push(`/sites/${site.slug}`)}
+      className="bg-white border border-[#E2E8F0] rounded-xl p-5 hover:shadow-md hover:border-[#CBD5E1] transition-all group flex flex-col gap-4 shadow-sm cursor-pointer"
     >
       {/* Logo + domain */}
       <div className="flex items-center justify-between">
@@ -53,7 +56,7 @@ export function SiteCard({ site }: SiteCardProps) {
           href={`https://${site.domain}`}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => e.stopPropagation()}
           className="text-[#CBD5E1] hover:text-[#64748B] transition-colors"
         >
           <ExternalLink size={13} />
@@ -94,6 +97,6 @@ export function SiteCard({ site }: SiteCardProps) {
           </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
