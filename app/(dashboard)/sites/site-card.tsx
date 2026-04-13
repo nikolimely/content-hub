@@ -48,7 +48,7 @@ export function SiteCard({ site }: SiteCardProps) {
       <div className="flex items-center justify-between">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={site.logo || `https://geticon.dev/?url=${encodeURIComponent(site.domain)}`}
+          src={site.logo || `https://geticon.dev/?url=${encodeURIComponent(site.domain)}&type=logo`}
           alt={site.name}
           className="h-[22px] w-auto object-contain"
         />
