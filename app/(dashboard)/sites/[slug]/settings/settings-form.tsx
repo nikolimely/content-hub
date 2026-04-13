@@ -14,7 +14,6 @@ type Site = {
   name: string;
   domain: string;
   description: string | null;
-  logo: string | null;
   faviconUrl: string | null;
   githubRepo: string;
   repoBranch: string;
@@ -139,7 +138,6 @@ export function SettingsForm({ site }: { site: Site }) {
   const [name, setName] = useState(site.name);
   const [domain, setDomain] = useState(site.domain);
   const [description, setDescription] = useState(site.description ?? "");
-  const [logo, setLogo] = useState(site.logo ?? "");
   const [faviconUrl, setFaviconUrl] = useState(site.faviconUrl ?? "");
 
   const [githubRepo, setGithubRepo] = useState(site.githubRepo);
@@ -184,7 +182,7 @@ export function SettingsForm({ site }: { site: Site }) {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name, domain, description, logo, faviconUrl,
+        name, domain, description, faviconUrl,
         githubRepo, repoBranch, contentPath, assetsPath,
         imageWidth: parseInt(imageWidth) || 1200,
         imageHeight: parseInt(imageHeight) || 800,
@@ -256,14 +254,9 @@ export function SettingsForm({ site }: { site: Site }) {
             <Field label="Description">
               <Textarea value={description} onChange={setDescription} placeholder="Short description of the site..." rows={2} />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Logo URL" hint="Used in the dashboard sidebar">
-                <Input value={logo} onChange={setLogo} placeholder="/logo.svg or https://..." monospace />
-              </Field>
-              <Field label="Favicon URL" hint="Used in the schedule calendar">
-                <Input value={faviconUrl} onChange={setFaviconUrl} placeholder="/favicon.ico or https://..." monospace />
-              </Field>
-            </div>
+            <Field label="Favicon URL" hint="Used in the schedule calendar">
+              <Input value={faviconUrl} onChange={setFaviconUrl} placeholder="/favicon.ico or https://..." monospace />
+            </Field>
           </div>
         </section>
 

@@ -16,7 +16,6 @@ function buildSettingsMd(site: {
   name: string;
   domain: string;
   description: string | null;
-  logo: string | null;
   faviconUrl: string | null;
   model: string;
   brandVoice: string | null;
@@ -49,7 +48,6 @@ function buildSettingsMd(site: {
     `name: ${site.name}`,
     `domain: ${site.domain}`,
     site.description ? `description: ${site.description}` : null,
-    site.logo ? `logo: ${site.logo}` : null,
     site.faviconUrl ? `favicon: ${site.faviconUrl}` : null,
     `model: ${site.model}`,
     site.brandVoice ? `brandVoice: ${site.brandVoice}` : null,
@@ -75,7 +73,6 @@ export async function PATCH(
     name,
     domain,
     description,
-    logo,
     faviconUrl,
     githubRepo,
     repoBranch,
@@ -99,7 +96,6 @@ export async function PATCH(
         ...(name !== undefined && { name }),
         ...(domain !== undefined && { domain }),
         ...(description !== undefined && { description: description || null }),
-        ...(logo !== undefined && { logo: logo || null }),
         ...(faviconUrl !== undefined && { faviconUrl: faviconUrl || null }),
         ...(githubRepo !== undefined && { githubRepo }),
         ...(repoBranch !== undefined && { repoBranch }),
