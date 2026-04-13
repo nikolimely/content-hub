@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 
 const statusColour: Record<string, string> = {
@@ -25,6 +26,16 @@ type SiteCardProps = {
 
 export function SiteCard({ site }: SiteCardProps) {
   const router = useRouter();
+  const [brandColor, setBrandColor] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(`https://geticon.dev/?url=${encodeURIComponent(site.domain)}&type=logo&format=json`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.colors?.[0]) setBrandColor(data.colors[0]);
+      })
+      .catch(() => {});
+  }, [site.domain]);
 
   const byStatus = site.articles.reduce((acc, a) => {
     acc[a.status] = (acc[a.status] || 0) + 1;
@@ -42,59 +53,67 @@ export function SiteCard({ site }: SiteCardProps) {
   return (
     <div
       onClick={() => router.push(`/sites/${site.slug}`)}
-      className="bg-white border border-[#E2E8F0] rounded-xl p-5 hover:shadow-md hover:border-[#CBD5E1] transition-all group flex flex-col gap-4 shadow-sm cursor-pointer"
+      className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden hover:shadow-md hover:border-[#CBD5E1] transition-all group flex flex-col shadow-sm cursor-pointer"
     >
-      {/* Logo + domain */}
-      <div className="flex items-center justify-between">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={site.logo || `https://geticon.dev/?url=${encodeURIComponent(site.domain)}&type=logo`}
-          alt={site.name}
-          className="h-[22px] w-auto object-contain"
-        />
-        <a
-          href={`https://${site.domain}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="text-[#CBD5E1] hover:text-[#64748B] transition-colors"
-        >
-          <ExternalLink size={13} />
-        </a>
-      </div>
+      {/* Brand colour top bar */}
+      <div
+        className="h-1 w-full transition-colors duration-500"
+        style={{ backgroundColor: brandColor ?? "#E2E8F0" }}
+      />
 
-      {/* Name + description */}
-      <div>
-        <p className="text-sm font-medium text-[#0F172A]">{site.name}</p>
-        {site.description ? (
-          <p className="text-xs text-[#94A3B8] mt-1 leading-relaxed line-clamp-2">
-            {site.description}
-          </p>
-        ) : (
-          <p className="text-xs text-[#94A3B8] mt-0.5">{site.domain}</p>
-        )}
-      </div>
+      <div className="p-5 flex flex-col gap-4 flex-1">
+        {/* Logo + domain */}
+        <div className="flex items-center justify-between">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={site.logo || `https://geticon.dev/?url=${encodeURIComponent(site.domain)}&type=logo`}
+            alt={site.name}
+            className="h-[22px] w-auto object-contain"
+          />
+          <a
+            href={`https://${site.domain}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[#CBD5E1] hover:text-[#64748B] transition-colors"
+          >
+            <ExternalLink size={13} />
+          </a>
+        </div>
 
-      {/* Stats */}
-      <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#E2E8F0]">
-        <div className="flex flex-wrap gap-1.5">
-          {(Object.entries(byStatus) as [string, number][])
-            .filter(([s]) => s !== "published")
-            .map(([s, count]) => (
-              <span key={s} className={`text-xs px-2 py-0.5 rounded-full ${statusColour[s] || "bg-slate-100 text-slate-500"}`}>
-                {count} {s}
-              </span>
-            ))}
-          {scheduled.length > 0 && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-600">
-              {scheduled.length} scheduled{lastScheduled && ` · last ${lastScheduled.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`}
-            </span>
+        {/* Name + description */}
+        <div>
+          <p className="text-sm font-medium text-[#0F172A]">{site.name}</p>
+          {site.description ? (
+            <p className="text-xs text-[#94A3B8] mt-1 leading-relaxed line-clamp-2">
+              {site.description}
+            </p>
+          ) : (
+            <p className="text-xs text-[#94A3B8] mt-0.5">{site.domain}</p>
           )}
         </div>
-        <div className="text-right shrink-0">
-          <span className="text-xs text-[#94A3B8] block">
-            {byStatus["published"] ?? 0} published
-          </span>
+
+        {/* Stats */}
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#E2E8F0]">
+          <div className="flex flex-wrap gap-1.5">
+            {(Object.entries(byStatus) as [string, number][])
+              .filter(([s]) => s !== "published")
+              .map(([s, count]) => (
+                <span key={s} className={`text-xs px-2 py-0.5 rounded-full ${statusColour[s] || "bg-slate-100 text-slate-500"}`}>
+                  {count} {s}
+                </span>
+              ))}
+            {scheduled.length > 0 && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-600">
+                {scheduled.length} scheduled{lastScheduled && ` · last ${lastScheduled.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`}
+              </span>
+            )}
+          </div>
+          <div className="text-right shrink-0">
+            <span className="text-xs text-[#94A3B8] block">
+              {byStatus["published"] ?? 0} published
+            </span>
+          </div>
         </div>
       </div>
     </div>
