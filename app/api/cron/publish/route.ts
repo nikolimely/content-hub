@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   // Find sites that have at least one post due in the last hour
   // (scheduledAt <= now and scheduledAt > now - 1 hour, status = published)
-  const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+  const twentyFiveHoursAgo = new Date(now.getTime() - 25 * 60 * 60 * 1000);
 
   const sites = await db.site.findMany({
     where: {
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       articles: {
         some: {
           status: "published",
-          scheduledAt: { lte: now, gt: oneHourAgo },
+          scheduledAt: { lte: now, gt: twentyFiveHoursAgo },
         },
       },
     },
