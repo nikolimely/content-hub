@@ -28,6 +28,7 @@ type Site = {
   targetAudience: string | null;
   externalLinksPath: string | null;
   deployHook: string | null;
+  deployFrequency: string;
   sitemapUrl: string | null;
   model: string;
 };
@@ -158,6 +159,7 @@ export function SettingsForm({ site }: { site: Site }) {
   const [targetAudience, setTargetAudience] = useState(site.targetAudience ?? "");
   const [externalLinksPath, setExternalLinksPath] = useState(site.externalLinksPath ?? "");
   const [deployHook, setDeployHook] = useState(site.deployHook ?? "");
+  const [deployFrequency, setDeployFrequency] = useState(site.deployFrequency ?? "daily");
   const [sitemapUrl, setSitemapUrl] = useState(site.sitemapUrl ?? "");
 
   function addContentType() {
@@ -188,7 +190,7 @@ export function SettingsForm({ site }: { site: Site }) {
         imageHeight: parseInt(imageHeight) || 800,
         authorsPath,
         contentTypes: contentTypes.length > 0 ? JSON.stringify(contentTypes) : null,
-        model, brandVoice, tone, targetAudience, externalLinksPath, deployHook, sitemapUrl,
+        model, brandVoice, tone, targetAudience, externalLinksPath, deployHook, deployFrequency, sitemapUrl,
       }),
     });
 
@@ -411,6 +413,26 @@ export function SettingsForm({ site }: { site: Site }) {
               hint="Vercel deploy hook — triggered automatically when a scheduled post becomes due"
             >
               <Input value={deployHook} onChange={setDeployHook} placeholder="https://api.vercel.com/v1/integrations/deploy/..." monospace />
+            </Field>
+            <Field label="Deploy frequency" hint="Weekly sites only rebuild on Mondays — reduces build costs for large sites">
+              <div className="flex gap-2">
+                {(["daily", "weekly"] as const).map((freq) => (
+                  <button
+                    key={freq}
+                    type="button"
+                    onClick={() => setDeployFrequency(freq)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-medium transition-colors capitalize",
+                      deployFrequency === freq
+                        ? "bg-[#2A2944] border-[#2A2944] text-white"
+                        : "bg-white border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] hover:border-[#CBD5E1]"
+                    )}
+                  >
+                    {deployFrequency === freq && <Check size={11} />}
+                    {freq}
+                  </button>
+                ))}
+              </div>
             </Field>
             <Field
               label="Sitemap URL"

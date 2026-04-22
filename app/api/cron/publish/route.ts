@@ -12,6 +12,8 @@ export async function GET(req: NextRequest) {
   const now = new Date();
   const twentyFiveHoursAgo = new Date(now.getTime() - 25 * 60 * 60 * 1000);
 
+  const isMonday = now.getUTCDay() === 1;
+
   const sites = await db.site.findMany({
     where: {
       deployHook: { not: null },
@@ -27,6 +29,11 @@ export async function GET(req: NextRequest) {
   const results: Record<string, string> = {};
 
   for (const site of sites) {
+    if (site.deployFrequency === "weekly" && !isMonday) {
+      results[site.slug] = "skipped (weekly — not Monday)";
+      continue;
+    }
+
     const hook = site.deployHook!;
     try {
       if (hook.startsWith("github:")) {

@@ -8,44 +8,44 @@ datasource db {
 }
 
 model Site {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  domain      String
-  githubRepo  String
-  repoBranch  String    @default("main")
-  contentPath String    @default("content/blog")
-  contentTypes String?  // JSON: [{"label":"Posts","path":"content/posts"}]
-  assetsPath  String    @default("public/images/blog")
-  imageWidth  Int       @default(1200)
-  imageHeight Int       @default(800)
-  description String?
-  logo        String?
-  faviconUrl  String?
-  model       String    @default("claude-sonnet-4-6")
-  brandVoice  String?
-  tone        String?
-  targetAudience String?
+  id                String    @id @default(cuid())
+  name              String
+  slug              String    @unique
+  domain            String
+  githubRepo        String
+  repoBranch        String    @default("main")
+  contentPath       String    @default("content/blog")
+  contentTypes      String?
+  assetsPath        String    @default("public/images/blog")
+  imageWidth        Int       @default(1200)
+  imageHeight       Int       @default(800)
+  description       String?
+  logo              String?
+  faviconUrl        String?
+  model             String    @default("claude-sonnet-4-6")
+  brandVoice        String?
+  tone              String?
+  targetAudience    String?
   externalLinksPath String?
-  authorsPath   String?
-  deployHook    String?
-  sitemapUrl    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  articles    Article[]
-  authors     Author[]
+  authorsPath       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deployHook        String?
+  deployFrequency   String    @default("daily")
+  sitemapUrl        String?
+  articles          Article[]
+  authors           Author[]
 }
 
 model Author {
-  id       String   @id @default(cuid())
+  id       String    @id @default(cuid())
   siteId   String
-  site     Site     @relation(fields: [siteId], references: [id])
   name     String
   slug     String
   bio      String?
   avatar   String?
   articles Article[]
+  site     Site      @relation(fields: [siteId], references: [id])
 
   @@unique([siteId, slug])
 }
@@ -56,27 +56,26 @@ model Settings {
 }
 
 model Article {
-  id          String   @id @default(cuid())
-  siteId      String
-  site        Site     @relation(fields: [siteId], references: [id])
-  authorId    String?
-  author      Author?  @relation(fields: [authorId], references: [id])
-
-  title       String
-  slug        String
-  keyword     String
-  category    String?
-  contentType String   @default("post")
+  id              String    @id @default(cuid())
+  siteId          String
+  authorId        String?
+  title           String
+  slug            String
+  keyword         String
+  category        String?
+  contentType     String    @default("post")
   metaDescription String?
-  status      String   @default("planned")
-  content     String?
-  heroImage   String?
-  images      String?
-  scheduledAt DateTime?
-  publishedAt DateTime?
-  errorLog    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status          String    @default("planned")
+  content         String?
+  heroImage       String?
+  images          String?
+  scheduledAt     DateTime?
+  publishedAt     DateTime?
+  errorLog        String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  author          Author?   @relation(fields: [authorId], references: [id])
+  site            Site      @relation(fields: [siteId], references: [id])
 
   @@unique([siteId, slug])
 }
