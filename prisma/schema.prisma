@@ -71,6 +71,7 @@ model Article {
   images          String?
   scheduledAt     DateTime?
   publishedAt     DateTime?
+  deployedAt      DateTime?
   errorLog        String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt

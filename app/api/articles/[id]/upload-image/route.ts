@@ -30,11 +30,11 @@ export async function POST(
   const imgWidth = article.site.imageWidth ?? 1200;
   const imgHeight = article.site.imageHeight ?? 800;
 
-  const processed = await sharp(Buffer.from(buffer))
-    .resize(imgWidth, imgHeight, { fit: "cover", position: "center" })
-    .jpeg({ quality: 82 })
-    .toBuffer();
-  const base64 = processed.toString("base64");
+  const resized = sharp(Buffer.from(buffer)).resize(imgWidth, imgHeight, { fit: "cover", position: "center" });
+  const [jpegBuffer, webpBuffer] = await Promise.all([
+    resized.clone().jpeg({ quality: 82 }).toBuffer(),
+    resized.clone().webp({ quality: 82 }).toBuffer(),
+  ]);
 
   const assetsPath = article.site.assetsPath ?? "public/images/blog";
   // Featured images go in /featured/ subfolder; inline images use a user-supplied word
@@ -44,16 +44,17 @@ export async function POST(
   const filePath = featured
     ? `${assetsPath}/featured/${filename}`
     : `${assetsPath}/${filename}`;
+  const webpFilePath = filePath.replace(/\.jpg$/, ".webp");
 
-  const sha = await getFileSha(article.site.githubRepo, filePath, article.site.repoBranch);
-  await putFileBase64(
-    article.site.githubRepo,
-    filePath,
-    base64,
-    article.site.repoBranch,
-    `asset: add ${filename} for ${article.slug}`,
-    sha ?? undefined
-  );
+  const [sha, webpSha] = await Promise.all([
+    getFileSha(article.site.githubRepo, filePath, article.site.repoBranch),
+    getFileSha(article.site.githubRepo, webpFilePath, article.site.repoBranch),
+  ]);
+
+  await Promise.all([
+    putFileBase64(article.site.githubRepo, filePath, jpegBuffer.toString("base64"), article.site.repoBranch, `asset: add ${filename} for ${article.slug}`, sha ?? undefined),
+    putFileBase64(article.site.githubRepo, webpFilePath, webpBuffer.toString("base64"), article.site.repoBranch, `asset: add ${filename.replace(/\.jpg$/, ".webp")} for ${article.slug}`, webpSha ?? undefined),
+  ]);
 
   const publicPath = `/${filePath.replace(/^public\//, "")}`;
   const credit = photographer ? `Photo by [${photographer}](https://www.pexels.com) on Pexels` : null;

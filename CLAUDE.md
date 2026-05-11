@@ -50,7 +50,7 @@ Repo: `git@github.com:nikolimely/content-hub.git`
 ### Publishing to GitHub
 - `lib/publish.ts` — commits MDX files to the site's GitHub repo
 - `lib/github.ts` — GitHub API helpers (get/put files, list directories)
-- Images are committed to `assetsPath` (e.g. `public/images/blog`)
+- Images are committed to `assetsPath` (e.g. `public/images/blog`) — both `.jpg` and `.webp` are committed in parallel on every upload
 - After publish, `scheduledAt` is set from frontmatter `date` if future-dated
 
 ### Preview Mode
@@ -94,7 +94,7 @@ CRON_SECRET         Vercel cron auth header secret
 - Deploy hook: set in site settings in Content Hub
 
 ### Swyng
-- Repo: `Limely/swyng`
+- Repo: `Limely/swyng-clubhouse`
 - Content types: guides, occasions, tips, courses, locations (all under `content/`)
 - Authors file: `data/authors.json`
 - Uses Velite for static content — preview renders via `/draft/[articleId]` with `@mdx-js/mdx` compilation
